@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  vnc_database:
+    image: postgres
+    container_name: vnc_database
+    restart: always
+    environment:
+      - POSTGRES_DB=vnc_database
+      - POSTGRES_USER=vnc_postgresql
+      - POSTGRES_PASSWORD=vnc_d4tab4s&
+    volumes:
+      - ./postgresql-init.sql:/docker-entrypoint-initdb.d/postgresql-init.sql
+    ports:
+      - "5432:5432"
