@@ -1,14 +1,23 @@
-## Sobre
+# vnc-database
 
-O `vnc-database` é o repositório responsável pela infraestrutura de dados da plataforma Você na Câmara. Neste repositório
-você encontrará todos os containers necessários para a execução de todas as bases de dados da plataforma, sendo, portanto,
-pré-requisito para rodar todas as APIs da Você na Câmara localmente.
+🌍 *[English](README.md) ∙ [Português](README_pt.md)*
 
-## Como Executar
+`vnc-database` is the repository responsible for the data infrastructure of the [Você na Câmara (VNC)](#você-na-câmara-vnc)
+platform.  In this repository you will find all the containers needed to run all the databases of the platform, therefore
+being a prerequisite to run all Você na Câmara APIs locally.
 
-Para construir as bases de dados você precisará ter o [Docker](https://www.docker.com/) instalado na sua máquina e
-executar o seguinte comando:
+## How to run
+
+To build the databases you will need to have [Docker](https://www.docker.com) installed on your machine and run the
+following commands in the root directory of this project:
 
 ````shell
+docker network create vnc_network
 docker compose up
 ````
+
+## Você Na Câmara (VNC)
+
+Você Na Câmara (VNC) is a news platform that seeks to simplify the proposals under debate in the Chamber of Deputies of
+Brazil aiming to synthesize the ideas of these propositions through the use of Artificial Intelligence (AI) so that
+these documents can have their ideas expressed in a simple and objective way for the general population.
