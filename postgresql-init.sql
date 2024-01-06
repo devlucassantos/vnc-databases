@@ -23,24 +23,24 @@ CREATE TABLE IF NOT EXISTS deputy
     name             VARCHAR(128) NOT NULL,
     electoral_name   VARCHAR(128) NOT NULL,
     image_url        VARCHAR(256) NOT NULL,
-
-    current_party_id UUID NOT NULL,
+    party_id         UUID NOT NULL,
 
     active           BOOLEAN      NOT NULL DEFAULT true,
     created_at       TIMESTAMP    NOT NULL DEFAULT now(),
     updated_at       TIMESTAMP    NOT NULL DEFAULT now(),
 
-    CONSTRAINT deputy_pk               PRIMARY KEY (id),
-    CONSTRAINT deputy_current_party_fk FOREIGN KEY (current_party_id) REFERENCES party (id)
+    CONSTRAINT deputy_pk       PRIMARY KEY (id),
+    CONSTRAINT deputy_party_fk FOREIGN KEY (party_id) REFERENCES party (id)
 );
 
 CREATE TABLE IF NOT EXISTS organization
 (
     id         UUID         DEFAULT uuid_generate_v4(),
-    code       INTEGER      NOT NULL,
+    code       INTEGER,
     name       TEXT         NOT NULL,
-    nickname   VARCHAR(256) NOT NULL,
-    acronym    VARCHAR(32)  NOT NULL,
+    nickname   VARCHAR(256),
+    acronym    VARCHAR(32),
+    type       VARCHAR(256) NOT NULL,
 
     active     BOOLEAN      NOT NULL DEFAULT true,
     created_at TIMESTAMP    NOT NULL DEFAULT now(),
@@ -55,8 +55,9 @@ CREATE TABLE IF NOT EXISTS proposition
     code              INTEGER      NOT NULL,
     original_text_url VARCHAR(256) NOT NULL,
     title             TEXT         NOT NULL,
-    summary           TEXT         NOT NULL,
+    content           TEXT         NOT NULL,
     submitted_at      TIMESTAMP    NOT NULL,
+    image_url         VARCHAR(256),
 
     active            BOOLEAN      NOT NULL DEFAULT true,
     created_at        TIMESTAMP    NOT NULL DEFAULT now(),
@@ -84,28 +85,56 @@ CREATE TABLE IF NOT EXISTS proposition_author
     CONSTRAINT proposition_author_organization_fk FOREIGN KEY (organization_id) REFERENCES organization    (id)
 );
 
-CREATE TABLE IF NOT EXISTS keyword
+CREATE TABLE IF NOT EXISTS newsletter
 (
-    id         UUID         DEFAULT uuid_generate_v4(),
-    keyword    VARCHAR(128) NOT NULL UNIQUE,
-
-    active     BOOLEAN      NOT NULL DEFAULT true,
-    created_at TIMESTAMP    NOT NULL DEFAULT now(),
-    updated_at TIMESTAMP    NOT NULL DEFAULT now(),
-
-    CONSTRAINT keyword_pk PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS proposition_keyword
-(
-    proposition_id UUID      NOT NULL,
-    keyword_id     UUID      NOT NULL,
+    id             UUID      DEFAULT uuid_generate_v4(),
+    title          TEXT      NOT NULL,
+    content        TEXT      NOT NULL,
+    reference_date DATE      NOT NULL,
 
     active         BOOLEAN   NOT NULL DEFAULT true,
     created_at     TIMESTAMP NOT NULL DEFAULT now(),
     updated_at     TIMESTAMP NOT NULL DEFAULT now(),
 
-    CONSTRAINT proposition_keyword_pks            PRIMARY KEY (proposition_id, keyword_id),
-    CONSTRAINT proposition_keyword_proposition_fk FOREIGN KEY (proposition_id) REFERENCES proposition (id),
-    CONSTRAINT proposition_keyword_keyword_fk     FOREIGN KEY (keyword_id)     REFERENCES keyword     (id)
+    CONSTRAINT newsletter_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS newsletter_proposition
+(
+    newsletter_id  UUID NOT NULL,
+    proposition_id UUID NOT NULL,
+
+    active         BOOLEAN   NOT NULL DEFAULT true,
+    created_at     TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at     TIMESTAMP NOT NULL DEFAULT now(),
+
+    CONSTRAINT newsletter_proposition_pk             PRIMARY KEY (newsletter_id, proposition_id),
+    CONSTRAINT newsletter_proposition_newsletter_fk  FOREIGN KEY (newsletter_id)  REFERENCES newsletter  (id),
+    CONSTRAINT newsletter_proposition_proposition_fk FOREIGN KEY (proposition_id) REFERENCES proposition (id)
+);
+
+CREATE TABLE IF NOT EXISTS news
+(
+    id             UUID      DEFAULT uuid_generate_v4(),
+    proposition_id UUID,
+    newsletter_id  UUID,
+
+    active         BOOLEAN   NOT NULL DEFAULT true,
+    created_at     TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at     TIMESTAMP NOT NULL DEFAULT now(),
+
+    CONSTRAINT news_pk             PRIMARY KEY (id),
+    CONSTRAINT news_proposition_fk FOREIGN KEY (proposition_id) REFERENCES proposition (id),
+    CONSTRAINT news_newsletter_fk  FOREIGN KEY (newsletter_id)  REFERENCES newsletter  (id)
+);
+
+CREATE TABLE IF NOT EXISTS news_view
+(
+    id         UUID      DEFAULT uuid_generate_v4(),
+    news_id    UUID      NOT NULL,
+
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+
+    CONSTRAINT news_view_pk      PRIMARY KEY (id),
+    CONSTRAINT news_view_news_fk FOREIGN KEY (news_id) REFERENCES news (id)
 );
