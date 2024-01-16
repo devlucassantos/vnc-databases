@@ -1,0 +1,19 @@
+databaseChangeLog:
+- changeSet:
+    id: 0001-01
+    author: Lucas Santos
+    context: all
+    comment: Inserting the role data
+    changes:
+        - insert:
+            tableName: role
+            columns:
+                - column:
+                    name: description
+                    value: Admin
+        - insert:
+            tableName: role
+            columns:
+                - column:
+                    name: description
+                    value: User

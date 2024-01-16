@@ -1,21 +1,31 @@
 version: '3'
 
 services:
-  vnc_postgresql:
-    image: postgres
-    container_name: vnc_postgresql
-    restart: always
-    environment:
-      - POSTGRES_DB=vnc_postgresql
-      - POSTGRES_USER=vnc_postgresql_user
-      - POSTGRES_PASSWORD=vnc_d4tab4s&
-    volumes:
-      - ./postgresql-init.sql:/docker-entrypoint-initdb.d/postgresql-init.sql
-    ports:
-      - "5435:5432"
-    networks:
-      - vnc_network
+    vnc_liquibase:
+        image: liquibase/liquibase
+        container_name: vnc_liquibase
+        volumes:
+            - ./liquibase:/liquibase/changelog
+        command: --defaultsFile=/liquibase/changelog/liquibase.properties update
+        depends_on:
+            - vnc_postgresql
+    vnc_postgresql:
+        image: postgres
+        container_name: vnc_postgresql
+        restart: always
+        environment:
+            - POSTGRES_DB=vnc_postgresql
+            - POSTGRES_USER=vnc_postgresql_user
+            - POSTGRES_PASSWORD=vnc_d4tab4s&
+        ports:
+            - "5435:5432"
+    vnc_redis:
+        image: redis
+        container_name: vnc_redis
+        restart: always
+        ports:
+            - "6382:6379"
 
 networks:
-  vnc_network:
-    external: true
+    vnc_network:
+        external: true
