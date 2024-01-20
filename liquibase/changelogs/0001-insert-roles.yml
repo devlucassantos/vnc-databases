@@ -17,3 +17,6 @@ databaseChangeLog:
                 - column:
                     name: description
                     value: User
+    rollback:
+        - delete:
+            tableName: role
