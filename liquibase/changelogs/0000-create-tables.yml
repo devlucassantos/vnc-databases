@@ -6,10 +6,10 @@ databaseChangeLog:
         comment: Creating the uuid-ossp extension
         changes:
             - sql:
-                sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+                sql: create extension if not exists "uuid-ossp"
         rollback:
             - sql:
-                sql: DROP EXTENSION IF EXISTS "uuid-ossp"
+                sql: drop extension if exists "uuid-ossp"
     - changeSet:
         id: 0000-02
         author: Lucas Santos
@@ -21,45 +21,45 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: id
-                        type: UUID
+                        type: uuid
                         defaultValueComputed: "uuid_generate_v4()"
                         constraints:
                             primaryKey: true
                     - column:
                         name: code
-                        type: INTEGER
+                        type: integer
                         constraints:
                             nullable: false
                     - column:
                         name: name
-                        type: VARCHAR(128)
+                        type: varchar(128)
                         constraints:
                             nullable: false
                     - column:
                         name: acronym
-                        type: VARCHAR(32)
+                        type: varchar(32)
                         constraints:
                             nullable: false
                     - column:
                         name: image_url
-                        type: VARCHAR(256)
+                        type: varchar(256)
                         constraints:
                             nullable: false
                     - column:
                         name: active
-                        type: BOOLEAN
+                        type: boolean
                         defaultValue: true
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
                     - column:
                         name: updated_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -77,55 +77,55 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: id
-                        type: UUID
+                        type: uuid
                         defaultValueComputed: "uuid_generate_v4()"
                         constraints:
                             primaryKey: true
                     - column:
                         name: code
-                        type: INTEGER
+                        type: integer
                         constraints:
                             nullable: false
                     - column:
                         name: cpf
-                        type: VARCHAR(32)
+                        type: varchar(32)
                         constraints:
                             nullable: false
                     - column:
                         name: name
-                        type: VARCHAR(128)
+                        type: varchar(128)
                         constraints:
                             nullable: false
                     - column:
                         name: electoral_name
-                        type: VARCHAR(128)
+                        type: varchar(128)
                         constraints:
                             nullable: false
                     - column:
                         name: image_url
-                        type: VARCHAR(256)
+                        type: varchar(256)
                         constraints:
                             nullable: false
                     - column:
                         name: party_id
-                        type: UUID
+                        type: uuid
                         constraints:
                             nullable: false
                     - column:
                         name: active
-                        type: BOOLEAN
+                        type: boolean
                         defaultValue: true
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
                     - column:
                         name: updated_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -149,44 +149,44 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: id
-                        type: UUID
+                        type: uuid
                         defaultValueComputed: "uuid_generate_v4()"
                         constraints:
                             primaryKey: true
                     - column:
                         name: code
-                        type: INTEGER
+                        type: integer
                     - column:
                         name: name
-                        type: TEXT
+                        type: text
                         constraints:
                             nullable: false
                     - column:
                         name: nickname
-                        type: VARCHAR(256)
+                        type: varchar(256)
                     - column:
                         name: acronym
-                        type: VARCHAR(32)
+                        type: varchar(32)
                     - column:
                         name: type
-                        type: VARCHAR(256)
+                        type: varchar(256)
                         constraints:
                             nullable: false
                     - column:
                         name: active
-                        type: BOOLEAN
+                        type: boolean
                         defaultValue: true
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
                     - column:
                         name: updated_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -204,53 +204,53 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: id
-                        type: UUID
+                        type: uuid
                         defaultValueComputed: "uuid_generate_v4()"
                         constraints:
                             primaryKey: true
                     - column:
                         name: code
-                        type: INTEGER
+                        type: integer
                         constraints:
                             nullable: false
                     - column:
                         name: original_text_url
-                        type: VARCHAR(256)
+                        type: varchar(256)
                         constraints:
                             nullable: false
                     - column:
                         name: title
-                        type: TEXT
+                        type: text
                         constraints:
                             nullable: false
                     - column:
                         name: content
-                        type: TEXT
+                        type: text
                         constraints:
                             nullable: false
                     - column:
                         name: submitted_at
-                        type: TIMESTAMP
+                        type: timestamp
                         constraints:
                             nullable: false
                     - column:
                         name: image_url
-                        type: VARCHAR(256)
+                        type: varchar(256)
                     - column:
                         name: active
-                        type: BOOLEAN
+                        type: boolean
                         defaultValue: true
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
                     - column:
                         name: updated_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -268,39 +268,39 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: id
-                        type: UUID
+                        type: uuid
                         defaultValueComputed: "uuid_generate_v4()"
                         constraints:
                             primaryKey: true
                     - column:
                         name: proposition_id
-                        type: UUID
+                        type: uuid
                         constraints:
                             nullable: false
                     - column:
                         name: deputy_id
-                        type: UUID
+                        type: uuid
                     - column:
                         name: party_id
-                        type: UUID
+                        type: uuid
                     - column:
                         name: organization_id
-                        type: UUID
+                        type: uuid
                     - column:
                         name: active
-                        type: BOOLEAN
+                        type: boolean
                         defaultValue: true
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
                     - column:
                         name: updated_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -339,40 +339,40 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: id
-                        type: UUID
+                        type: uuid
                         defaultValueComputed: "uuid_generate_v4()"
                         constraints:
                             primaryKey: true
                     - column:
                         name: title
-                        type: TEXT
+                        type: text
                         constraints:
                             nullable: false
                     - column:
                         name: content
-                        type: TEXT
+                        type: text
                         constraints:
                             nullable: false
                     - column:
                         name: reference_date
-                        type: DATE
+                        type: date
                         constraints:
                             nullable: false
                     - column:
                         name: active
-                        type: BOOLEAN
+                        type: boolean
                         defaultValue: true
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
                     - column:
                         name: updated_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -390,29 +390,29 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: newsletter_id
-                        type: UUID
+                        type: uuid
                         constraints:
                             primaryKey: true
                     - column:
                         name: proposition_id
-                        type: UUID
+                        type: uuid
                         constraints:
                             primaryKey: true
                     - column:
                         name: active
-                        type: BOOLEAN
+                        type: boolean
                         defaultValue: true
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
                     - column:
                         name: updated_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -441,31 +441,31 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: id
-                        type: UUID
+                        type: uuid
                         defaultValueComputed: "uuid_generate_v4()"
                         constraints:
                             primaryKey: true
                     - column:
                         name: proposition_id
-                        type: UUID
+                        type: uuid
                     - column:
                         name: newsletter_id
-                        type: UUID
+                        type: uuid
                     - column:
                         name: active
-                        type: BOOLEAN
+                        type: boolean
                         defaultValue: true
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
                     - column:
                         name: updated_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -494,18 +494,18 @@ databaseChangeLog:
                 columns:
                     - column:
                         name: id
-                        type: UUID
+                        type: uuid
                         defaultValueComputed: "uuid_generate_v4()"
                         constraints:
                             primaryKey: true
                     - column:
                         name: news_id
-                        type: UUID
+                        type: uuid
                         constraints:
                             nullable: false
                     - column:
                         name: created_at
-                        type: TIMESTAMP
+                        type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
@@ -528,50 +528,50 @@ databaseChangeLog:
             columns:
                 - column:
                     name: id
-                    type: UUID
+                    type: uuid
                     defaultValueComputed: "uuid_generate_v4()"
                     constraints:
                         primaryKey: true
                 - column:
                     name: first_name
-                    type: VARCHAR(64)
+                    type: varchar(64)
                     constraints:
                         nullable: false
                 - column:
                     name: last_name
-                    type: VARCHAR(64)
+                    type: varchar(64)
                     constraints:
                         nullable: false
                 - column:
                     name: email
-                    type: VARCHAR(256)
+                    type: varchar(256)
                     constraints:
                         nullable: false
                 - column:
                     name: password
-                    type: TEXT
+                    type: text
                     constraints:
                         nullable: false
                 - column:
                     name: hash
-                    type: VARCHAR(1024)
+                    type: varchar(1024)
                     constraints:
                         nullable: false
                 - column:
                     name: active
-                    type: BOOLEAN
+                    type: boolean
                     defaultValue: false
                     constraints:
                         nullable: false
                 - column:
                     name: created_at
-                    type: TIMESTAMP
+                    type: timestamp
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
                 - column:
                     name: updated_at
-                    type: TIMESTAMP
+                    type: timestamp
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
@@ -588,31 +588,31 @@ databaseChangeLog:
             columns:
                 - column:
                     name: id
-                    type: UUID
+                    type: uuid
                     defaultValueComputed: "uuid_generate_v4()"
                     constraints:
                         primaryKey: true
                 - column:
                     name: description
-                    type: VARCHAR(64)
+                    type: varchar(64)
                     constraints:
                         unique: true
                         nullable: false
                 - column:
                     name: active
-                    type: BOOLEAN
+                    type: boolean
                     defaultValue: true
                     constraints:
                         nullable: false
                 - column:
                     name: created_at
-                    type: TIMESTAMP
+                    type: timestamp
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
                 - column:
                     name: updated_at
-                    type: TIMESTAMP
+                    type: timestamp
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
@@ -629,35 +629,35 @@ databaseChangeLog:
             columns:
                 - column:
                     name: id
-                    type: UUID
+                    type: uuid
                     defaultValueComputed: "uuid_generate_v4()"
                     constraints:
                         primaryKey: true
                 - column:
                     name: user_id
-                    type: UUID
+                    type: uuid
                     constraints:
                         nullable: false
                 - column:
                     name: role_id
-                    type: UUID
+                    type: uuid
                     constraints:
                         nullable: false
                 - column:
                     name: active
-                    type: BOOLEAN
+                    type: boolean
                     defaultValue: false
                     constraints:
                         nullable: false
                 - column:
                     name: created_at
-                    type: TIMESTAMP
+                    type: timestamp
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
                 - column:
                     name: updated_at
-                    type: TIMESTAMP
+                    type: timestamp
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
@@ -685,34 +685,34 @@ databaseChangeLog:
             columns:
                 - column:
                     name: user_id
-                    type: UUID
+                    type: uuid
                     constraints:
                         primaryKey: true
                 - column:
                     name: proposition_id
-                    type: UUID
+                    type: uuid
                     constraints:
                         primaryKey: true
                 - column:
                     name: rate
-                    type: INTEGER
+                    type: integer
                     constraints:
                         nullable: false
                 - column:
                     name: active
-                    type: BOOLEAN
+                    type: boolean
                     defaultValue: false
                     constraints:
                         nullable: false
                 - column:
                     name: created_at
-                    type: TIMESTAMP
+                    type: timestamp
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
                 - column:
                     name: updated_at
-                    type: TIMESTAMP
+                    type: timestamp
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
