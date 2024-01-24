@@ -236,6 +236,8 @@ databaseChangeLog:
                     - column:
                         name: image_url
                         type: varchar(256)
+                        constraints:
+                            nullable: false
                     - column:
                         name: active
                         type: boolean
@@ -354,6 +356,11 @@ databaseChangeLog:
                         constraints:
                             nullable: false
                     - column:
+                        name: image_url
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
                         name: reference_date
                         type: date
                         constraints:
@@ -451,6 +458,12 @@ databaseChangeLog:
                     - column:
                         name: newsletter_id
                         type: uuid
+                    - column:
+                        name: reference_date_time
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
                     - column:
                         name: active
                         type: boolean
