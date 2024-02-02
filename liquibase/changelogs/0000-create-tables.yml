@@ -1,0 +1,745 @@
+databaseChangeLog:
+    - changeSet:
+        id: 0000-01
+        author: Lucas Santos
+        context: all
+        comment: Creating the uuid-ossp extension
+        changes:
+            - sql:
+                sql: create extension if not exists "uuid-ossp"
+        rollback:
+            - sql:
+                sql: drop extension if exists "uuid-ossp"
+    - changeSet:
+        id: 0000-02
+        author: Lucas Santos
+        context: all
+        comment: Creating the party table
+        changes:
+            - createTable:
+                tableName: party
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: code
+                        type: integer
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: name
+                        type: varchar(128)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: acronym
+                        type: varchar(32)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: image_url
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+        rollback:
+            - dropTable:
+                tableName: party
+    - changeSet:
+        id: 0000-03
+        author: Lucas Santos
+        context: all
+        comment: Creating the deputy table
+        changes:
+            - createTable:
+                tableName: deputy
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: code
+                        type: integer
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: cpf
+                        type: varchar(32)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: name
+                        type: varchar(128)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: electoral_name
+                        type: varchar(128)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: image_url
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: party_id
+                        type: uuid
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                constraints:
+                    - foreignKey:
+                        constraintName: deputy_party_fk
+                        references:
+                            tableName: party
+                            columnNames: [party_id]
+        rollback:
+            - dropTable:
+                tableName: deputy
+    - changeSet:
+        id: 0000-04
+        author: Lucas Santos
+        context: all
+        comment: Creating the organization table
+        changes:
+            - createTable:
+                tableName: organization
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: code
+                        type: integer
+                    - column:
+                        name: name
+                        type: text
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: nickname
+                        type: varchar(256)
+                    - column:
+                        name: acronym
+                        type: varchar(32)
+                    - column:
+                        name: type
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+        rollback:
+            - dropTable:
+                tableName: organization
+    - changeSet:
+        id: 0000-05
+        author: Lucas Santos
+        context: all
+        comment: Creating the proposition table
+        changes:
+            - createTable:
+                tableName: proposition
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: code
+                        type: integer
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: original_text_url
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: title
+                        type: text
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: content
+                        type: text
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: submitted_at
+                        type: timestamp
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: image_url
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+        rollback:
+            - dropTable:
+                tableName: proposition
+    - changeSet:
+        id: 0000-06
+        author: Lucas Santos
+        context: all
+        comment: Creating the proposition_author table
+        changes:
+            - createTable:
+                tableName: proposition_author
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: proposition_id
+                        type: uuid
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: deputy_id
+                        type: uuid
+                    - column:
+                        name: party_id
+                        type: uuid
+                    - column:
+                        name: organization_id
+                        type: uuid
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                constraints:
+                    - foreignKey:
+                        references:
+                            constraintName: proposition_author_proposition_fk
+                            tableName: proposition
+                            columnNames: [proposition_id]
+                    - foreignKey:
+                        references:
+                            constraintName: proposition_author_deputy_fk
+                            tableName: deputy
+                            columnNames: [deputy_id]
+                    - foreignKey:
+                        references:
+                            constraintName: proposition_author_party_fk
+                            tableName: party
+                            columnNames: [party_id]
+                    - foreignKey:
+                        references:
+                            constraintName: proposition_author_organization_fk
+                            tableName: organization
+                            columnNames: [organization_id]
+        rollback:
+            - dropTable:
+                tableName: proposition_author
+    - changeSet:
+        id: 0000-07
+        author: Lucas Santos
+        context: all
+        comment: Creating the newsletter table
+        changes:
+            - createTable:
+                tableName: newsletter
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: title
+                        type: text
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: content
+                        type: text
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: image_url
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: reference_date
+                        type: date
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+        rollback:
+            - dropTable:
+                tableName: newsletter
+    - changeSet:
+        id: 0000-08
+        author: Lucas Santos
+        context: all
+        comment: Creating the newsletter_proposition table
+        changes:
+            - createTable:
+                tableName: newsletter_proposition
+                columns:
+                    - column:
+                        name: newsletter_id
+                        type: uuid
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: proposition_id
+                        type: uuid
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                constraints:
+                    - foreignKey:
+                        constraintName: newsletter_proposition_newsletter_fk
+                        references:
+                            tableName: newsletter
+                            columnNames: [newsletter_id]
+                    - foreignKey:
+                        constraintName: newsletter_proposition_proposition_fk
+                        references:
+                            tableName: proposition
+                            columnNames: [proposition_id]
+        rollback:
+            - dropTable:
+                tableName: newsletter_proposition
+    - changeSet:
+        id: 0000-09
+        author: Lucas Santos
+        context: all
+        comment: Creating the news table
+        changes:
+            - createTable:
+                tableName: news
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: proposition_id
+                        type: uuid
+                    - column:
+                        name: newsletter_id
+                        type: uuid
+                    - column:
+                        name: reference_date_time
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                constraints:
+                    - foreignKey:
+                        constraintName: news_proposition_fk
+                        references:
+                            tableName: proposition
+                            columnNames: [proposition_id]
+                    - foreignKey:
+                        constraintName: news_newsletter_fk
+                        references:
+                            tableName: newsletter
+                            columnNames: [newsletter_id]
+        rollback:
+            - dropTable:
+                tableName: news
+    - changeSet:
+        id: 0000-10
+        author: Lucas Santos
+        context: all
+        comment: Creating the news_view table
+        changes:
+            - createTable:
+                tableName: news_view
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: news_id
+                        type: uuid
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                constraints:
+                    - foreignKey:
+                        constraintName: news_view_news_fk
+                        references:
+                            tableName: news
+                            columnNames: [news_id]
+        rollback:
+            - dropTable:
+                tableName: news_view
+    - changeSet:
+        id: 0000-11
+        author: Lucas Santos
+        context: all
+        comment: Creating the user table
+        createTable:
+            tableName: user
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: first_name
+                    type: varchar(64)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: last_name
+                    type: varchar(64)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: email
+                    type: varchar(256)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: password
+                    type: text
+                    constraints:
+                        nullable: false
+                - column:
+                    name: hash
+                    type: varchar(1024)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: false
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+        rollback:
+            - dropTable:
+                tableName: user
+    - changeSet:
+        id: 0000-12
+        author: Lucas Santos
+        context: all
+        comment: Creating the role table
+        createTable:
+            tableName: role
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: description
+                    type: varchar(64)
+                    constraints:
+                        unique: true
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+        rollback:
+            - dropTable:
+                tableName: role
+    - changeSet:
+        id: 0000-13
+        author: Lucas Santos
+        context: all
+        comment: Creating the user_role table
+        createTable:
+            tableName: user_role
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: user_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: role_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: false
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+            constraints:
+                - foreignKey:
+                    constraintName: user_role_user_fk
+                    references:
+                        tableName: user
+                        columnNames: [user_id]
+                - foreignKey:
+                    constraintName: user_role_role_fk
+                    references:
+                        tableName: role
+                        columnNames: [role_id]
+        rollback:
+            - dropTable:
+                tableName: user_role
+    - changeSet:
+        id: 0000-14
+        author: Lucas Santos
+        context: all
+        comment: Creating the user_proposition table
+        createTable:
+            tableName: user_proposition
+            columns:
+                - column:
+                    name: user_id
+                    type: uuid
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: proposition_id
+                    type: uuid
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: rate
+                    type: integer
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: false
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+            constraints:
+                - foreignKey:
+                    constraintName: user_proposition_user_fk
+                    references:
+                        tableName: user
+                        columnNames: [user_id]
+                - foreignKey:
+                    constraintName: user_proposition_proposition_fk
+                    references:
+                        tableName: proposition
+                        columnNames: [proposition_id]
+        rollback:
+            - dropTable:
+                tableName: user_proposition

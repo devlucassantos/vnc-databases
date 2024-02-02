@@ -1,8 +1,8 @@
-# vnc-database
+# vnc-databases
 
 🌍 *[English](README.md) ∙ [Português](README_pt.md)*
 
-`vnc-database` é o repositório responsável pela infraestrutura de dados da plataforma [Você na Câmara (VNC)](#você-na-câmara-vnc).
+`vnc-databases` é o repositório responsável pela infraestrutura de dados da plataforma [Você na Câmara (VNC)](#você-na-câmara-vnc).
 Neste repositório você encontrará todos os containers necessários para a execução de todas as bases de dados da plataforma,
 sendo, portanto, pré-requisito para rodar todas as APIs da Você na Câmara localmente.
 
