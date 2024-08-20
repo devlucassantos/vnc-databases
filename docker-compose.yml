@@ -23,6 +23,9 @@ services:
         image: redis
         container_name: vnc_redis
         restart: always
+        environment:
+            - REDIS_PASSWORD=vnc_d4tab4s&
+        command: [ "redis-server", "--requirepass", "vnc_d4tab4s&" ]
         ports:
             - "6382:6379"
 

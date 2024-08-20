@@ -1,0 +1,142 @@
+databaseChangeLog:
+- changeSet:
+    id: 0001-01
+    author: Lucas Santos
+    context: all
+    comment: Inserting role data
+    changes:
+        - insert:
+            tableName: role
+            columns:
+                - column:
+                    name: code
+                    value: ADMIN
+                - column:
+                    name: description
+                    value: Administrador
+        - insert:
+            tableName: role
+            columns:
+                - column:
+                    name: code
+                    value: USER
+                - column:
+                    name: description
+                    value: Usuário
+    rollback:
+        - delete:
+            tableName: role
+- changeSet:
+    id: 0001-02
+    author: Lucas Santos
+    context: all
+    comment: Inserting proposition type data
+    changes:
+        - insert:
+            tableName: proposition_type
+            columns:
+                - column:
+                    name: description
+                    value: Projeto de Lei
+                - column:
+                    name: codes
+                    value: 139
+                - column:
+                    name: color
+                    value: '#C4170C'
+                - column:
+                    name: sort_order
+                    value: 1
+        - insert:
+            tableName: proposition_type
+            columns:
+                - column:
+                    name: description
+                    value: Medida Provisória
+                - column:
+                    name: codes
+                    value: 291
+                - column:
+                    name: color
+                    value: '#E3672B'
+                - column:
+                    name: sort_order
+                    value: 2
+        -   insert:
+                tableName: proposition_type
+                columns:
+                - column:
+                    name: description
+                    value: Proposta de Emenda à Constituição
+                - column:
+                    name: codes
+                    value: 136
+                - column:
+                    name: color
+                    value: '#06AA48'
+                - column:
+                    name: sort_order
+                    value: 3
+        - insert:
+            tableName: proposition_type
+            columns:
+                - column:
+                    name: description
+                    value: Projeto de Lei Complementar
+                - column:
+                    name: codes
+                    value: 140
+                - column:
+                    name: color
+                    value: '#1E4C9A'
+                - column:
+                    name: sort_order
+                    value: 4
+        - insert:
+            tableName: proposition_type
+            columns:
+                - column:
+                    name: description
+                    value: Projeto de Decreto Legislativo
+                - column:
+                    name: codes
+                    value: 557
+                - column:
+                    name: color
+                    value: '#006767'
+                - column:
+                    name: sort_order
+                    value: 5
+        - insert:
+            tableName: proposition_type
+            columns:
+                - column:
+                    name: description
+                    value: Emenda de Plenário
+                - column:
+                    name: codes
+                    value: 870
+                - column:
+                    name: color
+                    value: '#5001B3'
+                - column:
+                    name: sort_order
+                    value: 6
+        - insert:
+            tableName: proposition_type
+            columns:
+                - column:
+                    name: description
+                    value: Outras Proposições
+                - column:
+                    name: codes
+                    value: ''
+                - column:
+                    name: color
+                    value: '#A5147D'
+                - column:
+                    name: sort_order
+                    value: 7
+    rollback:
+        - delete:
+            tableName: proposition_type

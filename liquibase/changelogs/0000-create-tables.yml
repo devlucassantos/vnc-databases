@@ -129,12 +129,12 @@ databaseChangeLog:
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
-                constraints:
-                    - foreignKey:
-                        constraintName: deputy_party_fk
-                        references:
-                            tableName: party
-                            columnNames: [party_id]
+            - addForeignKeyConstraint:
+                constraintName: deputy_party_fk
+                baseTableName: deputy
+                baseColumnNames: party_id
+                referencedTableName: party
+                referencedColumnNames: id
         rollback:
             - dropTable:
                 tableName: deputy
@@ -142,10 +142,10 @@ databaseChangeLog:
         id: 0000-04
         author: Lucas Santos
         context: all
-        comment: Creating the organization table
+        comment: Creating the external_author table
         changes:
             - createTable:
-                tableName: organization
+                tableName: external_author
                 columns:
                     - column:
                         name: id
@@ -154,19 +154,10 @@ databaseChangeLog:
                         constraints:
                             primaryKey: true
                     - column:
-                        name: code
-                        type: integer
-                    - column:
                         name: name
-                        type: text
+                        type: varchar(256)
                         constraints:
                             nullable: false
-                    - column:
-                        name: nickname
-                        type: varchar(256)
-                    - column:
-                        name: acronym
-                        type: varchar(32)
                     - column:
                         name: type
                         type: varchar(256)
@@ -192,9 +183,62 @@ databaseChangeLog:
                             nullable: false
         rollback:
             - dropTable:
-                tableName: organization
+                tableName: external_author
     - changeSet:
         id: 0000-05
+        author: Lucas Santos
+        context: all
+        comment: Creating the proposition_type table
+        changes:
+            - createTable:
+                tableName: proposition_type
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: description
+                        type: varchar(126)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: codes
+                        type: varchar(126)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: color
+                        type: varchar(10)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: sort_order
+                        type: integer
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+    - changeSet:
+        id: 0000-06
         author: Lucas Santos
         context: all
         comment: Creating the proposition table
@@ -220,7 +264,7 @@ databaseChangeLog:
                             nullable: false
                     - column:
                         name: title
-                        type: text
+                        type: varchar(256)
                         constraints:
                             nullable: false
                     - column:
@@ -235,6 +279,16 @@ databaseChangeLog:
                             nullable: false
                     - column:
                         name: image_url
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: proposition_type_id
+                        type: uuid
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: specific_type
                         type: varchar(256)
                         constraints:
                             nullable: false
@@ -260,7 +314,7 @@ databaseChangeLog:
             - dropTable:
                 tableName: proposition
     - changeSet:
-        id: 0000-06
+        id: 0000-07
         author: Lucas Santos
         context: all
         comment: Creating the proposition_author table
@@ -286,7 +340,7 @@ databaseChangeLog:
                         name: party_id
                         type: uuid
                     - column:
-                        name: organization_id
+                        name: external_author_id
                         type: uuid
                     - column:
                         name: active
@@ -306,32 +360,35 @@ databaseChangeLog:
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
-                constraints:
-                    - foreignKey:
-                        references:
-                            constraintName: proposition_author_proposition_fk
-                            tableName: proposition
-                            columnNames: [proposition_id]
-                    - foreignKey:
-                        references:
-                            constraintName: proposition_author_deputy_fk
-                            tableName: deputy
-                            columnNames: [deputy_id]
-                    - foreignKey:
-                        references:
-                            constraintName: proposition_author_party_fk
-                            tableName: party
-                            columnNames: [party_id]
-                    - foreignKey:
-                        references:
-                            constraintName: proposition_author_organization_fk
-                            tableName: organization
-                            columnNames: [organization_id]
+            - addForeignKeyConstraint:
+                constraintName: proposition_author_proposition_fk
+                baseTableName: proposition_author
+                baseColumnNames: proposition_id
+                referencedTableName: proposition
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: proposition_author_deputy_fk
+                baseTableName: proposition_author
+                baseColumnNames: deputy_id
+                referencedTableName: deputy
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: proposition_author_party_fk
+                baseTableName: proposition_author
+                baseColumnNames: party_id
+                referencedTableName: party
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: proposition_author_external_author_fk
+                baseTableName: proposition_author
+                baseColumnNames: external_author_id
+                referencedTableName: external_author
+                referencedColumnNames: id
         rollback:
             - dropTable:
                 tableName: proposition_author
     - changeSet:
-        id: 0000-07
+        id: 0000-08
         author: Lucas Santos
         context: all
         comment: Creating the newsletter table
@@ -346,23 +403,18 @@ databaseChangeLog:
                         constraints:
                             primaryKey: true
                     - column:
+                        name: reference_date
+                        type: date
+                        constraints:
+                            nullable: false
+                    - column:
                         name: title
-                        type: text
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: content
-                        type: text
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: image_url
                         type: varchar(256)
                         constraints:
                             nullable: false
                     - column:
-                        name: reference_date
-                        type: date
+                        name: description
+                        type: varchar(562)
                         constraints:
                             nullable: false
                     - column:
@@ -387,7 +439,7 @@ databaseChangeLog:
             - dropTable:
                 tableName: newsletter
     - changeSet:
-        id: 0000-08
+        id: 0000-09
         author: Lucas Santos
         context: all
         comment: Creating the newsletter_proposition table
@@ -423,28 +475,29 @@ databaseChangeLog:
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
-                constraints:
-                    - foreignKey:
-                        constraintName: newsletter_proposition_newsletter_fk
-                        references:
-                            tableName: newsletter
-                            columnNames: [newsletter_id]
-                    - foreignKey:
-                        constraintName: newsletter_proposition_proposition_fk
-                        references:
-                            tableName: proposition
-                            columnNames: [proposition_id]
+            - addForeignKeyConstraint:
+                constraintName: newsletter_proposition_newsletter_fk
+                baseTableName: newsletter_proposition
+                baseColumnNames: newsletter_id
+                referencedTableName: newsletter
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: newsletter_proposition_proposition_fk
+                baseTableName: newsletter_proposition
+                baseColumnNames: proposition_id
+                referencedTableName: proposition
+                referencedColumnNames: id
         rollback:
             - dropTable:
                 tableName: newsletter_proposition
     - changeSet:
-        id: 0000-09
+        id: 0000-10
         author: Lucas Santos
         context: all
-        comment: Creating the news table
+        comment: Creating the article table
         changes:
             - createTable:
-                tableName: news
+                tableName: article
                 columns:
                     - column:
                         name: id
@@ -482,28 +535,29 @@ databaseChangeLog:
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
-                constraints:
-                    - foreignKey:
-                        constraintName: news_proposition_fk
-                        references:
-                            tableName: proposition
-                            columnNames: [proposition_id]
-                    - foreignKey:
-                        constraintName: news_newsletter_fk
-                        references:
-                            tableName: newsletter
-                            columnNames: [newsletter_id]
+            - addForeignKeyConstraint:
+                constraintName: article_proposition_fk
+                baseTableName: article
+                baseColumnNames: proposition_id
+                referencedTableName: proposition
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: article_newsletter_fk
+                baseTableName: article
+                baseColumnNames: newsletter_id
+                referencedTableName: newsletter
+                referencedColumnNames: id
         rollback:
             - dropTable:
-                tableName: news
+                tableName: article
     - changeSet:
-        id: 0000-10
+        id: 0000-11
         author: Lucas Santos
         context: all
-        comment: Creating the news_view table
+        comment: Creating the article_view table
         changes:
             - createTable:
-                tableName: news_view
+                tableName: article_view
                 columns:
                     - column:
                         name: id
@@ -512,7 +566,7 @@ databaseChangeLog:
                         constraints:
                             primaryKey: true
                     - column:
-                        name: news_id
+                        name: article_id
                         type: uuid
                         constraints:
                             nullable: false
@@ -522,224 +576,235 @@ databaseChangeLog:
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
-                constraints:
-                    - foreignKey:
-                        constraintName: news_view_news_fk
-                        references:
-                            tableName: news
-                            columnNames: [news_id]
+            - addForeignKeyConstraint:
+                constraintName: article_view_article_fk
+                baseTableName: article_view
+                baseColumnNames: article_id
+                referencedTableName: article
+                referencedColumnNames: id
         rollback:
             - dropTable:
-                tableName: news_view
-    - changeSet:
-        id: 0000-11
-        author: Lucas Santos
-        context: all
-        comment: Creating the user table
-        createTable:
-            tableName: user
-            columns:
-                - column:
-                    name: id
-                    type: uuid
-                    defaultValueComputed: "uuid_generate_v4()"
-                    constraints:
-                        primaryKey: true
-                - column:
-                    name: first_name
-                    type: varchar(64)
-                    constraints:
-                        nullable: false
-                - column:
-                    name: last_name
-                    type: varchar(64)
-                    constraints:
-                        nullable: false
-                - column:
-                    name: email
-                    type: varchar(256)
-                    constraints:
-                        nullable: false
-                - column:
-                    name: password
-                    type: text
-                    constraints:
-                        nullable: false
-                - column:
-                    name: hash
-                    type: varchar(1024)
-                    constraints:
-                        nullable: false
-                - column:
-                    name: active
-                    type: boolean
-                    defaultValue: false
-                    constraints:
-                        nullable: false
-                - column:
-                    name: created_at
-                    type: timestamp
-                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                    constraints:
-                        nullable: false
-                - column:
-                    name: updated_at
-                    type: timestamp
-                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                    constraints:
-                        nullable: false
-        rollback:
-            - dropTable:
-                tableName: user
+                tableName: article_view
     - changeSet:
         id: 0000-12
         author: Lucas Santos
         context: all
-        comment: Creating the role table
-        createTable:
-            tableName: role
-            columns:
-                - column:
-                    name: id
-                    type: uuid
-                    defaultValueComputed: "uuid_generate_v4()"
-                    constraints:
-                        primaryKey: true
-                - column:
-                    name: description
-                    type: varchar(64)
-                    constraints:
-                        unique: true
-                        nullable: false
-                - column:
-                    name: active
-                    type: boolean
-                    defaultValue: true
-                    constraints:
-                        nullable: false
-                - column:
-                    name: created_at
-                    type: timestamp
-                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                    constraints:
-                        nullable: false
-                - column:
-                    name: updated_at
-                    type: timestamp
-                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                    constraints:
-                        nullable: false
+        comment: Creating the user table
+        changes:
+            - createTable:
+                tableName: user
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: first_name
+                        type: varchar(64)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: last_name
+                        type: varchar(64)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: email
+                        type: varchar(256)
+                        constraints:
+                            unique: true
+                            nullable: false
+                    - column:
+                        name: password
+                        type: varchar(256)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: false
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
         rollback:
             - dropTable:
-                tableName: role
+                tableName: user
     - changeSet:
         id: 0000-13
         author: Lucas Santos
         context: all
-        comment: Creating the user_role table
-        createTable:
-            tableName: user_role
-            columns:
-                - column:
-                    name: id
-                    type: uuid
-                    defaultValueComputed: "uuid_generate_v4()"
-                    constraints:
-                        primaryKey: true
-                - column:
-                    name: user_id
-                    type: uuid
-                    constraints:
-                        nullable: false
-                - column:
-                    name: role_id
-                    type: uuid
-                    constraints:
-                        nullable: false
-                - column:
-                    name: active
-                    type: boolean
-                    defaultValue: false
-                    constraints:
-                        nullable: false
-                - column:
-                    name: created_at
-                    type: timestamp
-                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                    constraints:
-                        nullable: false
-                - column:
-                    name: updated_at
-                    type: timestamp
-                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                    constraints:
-                        nullable: false
-            constraints:
-                - foreignKey:
-                    constraintName: user_role_user_fk
-                    references:
-                        tableName: user
-                        columnNames: [user_id]
-                - foreignKey:
-                    constraintName: user_role_role_fk
-                    references:
-                        tableName: role
-                        columnNames: [role_id]
+        comment: Creating the role table
+        changes:
+            - createTable:
+                tableName: role
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: code
+                        type: varchar(64)
+                        constraints:
+                            unique: true
+                            nullable: false
+                    - column:
+                        name: description
+                        type: varchar(128)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
         rollback:
             - dropTable:
-                tableName: user_role
+                tableName: role
     - changeSet:
         id: 0000-14
         author: Lucas Santos
         context: all
-        comment: Creating the user_proposition table
-        createTable:
-            tableName: user_proposition
-            columns:
-                - column:
-                    name: user_id
-                    type: uuid
-                    constraints:
-                        primaryKey: true
-                - column:
-                    name: proposition_id
-                    type: uuid
-                    constraints:
-                        primaryKey: true
-                - column:
-                    name: rate
-                    type: integer
-                    constraints:
-                        nullable: false
-                - column:
-                    name: active
-                    type: boolean
-                    defaultValue: false
-                    constraints:
-                        nullable: false
-                - column:
-                    name: created_at
-                    type: timestamp
-                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                    constraints:
-                        nullable: false
-                - column:
-                    name: updated_at
-                    type: timestamp
-                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                    constraints:
-                        nullable: false
-            constraints:
-                - foreignKey:
-                    constraintName: user_proposition_user_fk
-                    references:
-                        tableName: user
-                        columnNames: [user_id]
-                - foreignKey:
-                    constraintName: user_proposition_proposition_fk
-                    references:
-                        tableName: proposition
-                        columnNames: [proposition_id]
+        comment: Creating the user_role table
+        changes:
+            - createTable:
+                tableName: user_role
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: user_id
+                        type: uuid
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: role_id
+                        type: uuid
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+            - addForeignKeyConstraint:
+                constraintName: user_role_user_fk
+                baseTableName: user_role
+                baseColumnNames: user_id
+                referencedTableName: user
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: user_role_role_fk
+                baseTableName: user_role
+                baseColumnNames: role_id
+                referencedTableName: role
+                referencedColumnNames: id
         rollback:
             - dropTable:
-                tableName: user_proposition
+                tableName: user_role
+    - changeSet:
+        id: 0000-15
+        author: Lucas Santos
+        context: all
+        comment: Creating the user_article table
+        changes:
+            - createTable:
+                tableName: user_article
+                columns:
+                    - column:
+                        name: user_id
+                        type: uuid
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: article_id
+                        type: uuid
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: rating
+                        type: int
+                    - column:
+                        name: view_later
+                        type: boolean
+                        defaultValue: false
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+            - addForeignKeyConstraint:
+                constraintName: user_article_user_fk
+                baseTableName: user_article
+                baseColumnNames: user_id
+                referencedTableName: user
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: user_article_article_fk
+                baseTableName: user_article
+                baseColumnNames: article_id
+                referencedTableName: article
+                referencedColumnNames: id
+        rollback:
+            - dropTable:
+                tableName: user_article
