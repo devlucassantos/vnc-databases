@@ -88,7 +88,7 @@ databaseChangeLog:
                             nullable: false
                     - column:
                         name: cpf
-                        type: varchar(32)
+                        type: varchar(16)
                         constraints:
                             nullable: false
                     - column:
@@ -155,12 +155,12 @@ databaseChangeLog:
                             primaryKey: true
                     - column:
                         name: name
-                        type: varchar(256)
+                        type: varchar(128)
                         constraints:
                             nullable: false
                     - column:
                         name: type
-                        type: varchar(256)
+                        type: varchar(128)
                         constraints:
                             nullable: false
                     - column:
@@ -201,12 +201,12 @@ databaseChangeLog:
                             primaryKey: true
                     - column:
                         name: description
-                        type: varchar(126)
+                        type: varchar(64)
                         constraints:
                             nullable: false
                     - column:
                         name: codes
-                        type: varchar(126)
+                        type: varchar(64)
                         constraints:
                             nullable: false
                     - column:
@@ -289,7 +289,7 @@ databaseChangeLog:
                             nullable: false
                     - column:
                         name: specific_type
-                        type: varchar(256)
+                        type: varchar(128)
                         constraints:
                             nullable: false
                     - column:
@@ -310,6 +310,12 @@ databaseChangeLog:
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
+                    - addForeignKeyConstraint:
+                        constraintName: proposition_proposition_type_fk
+                        baseTableName: proposition
+                        baseColumnNames: proposition_type_id
+                        referencedTableName: proposition_type
+                        referencedColumnNames: id
         rollback:
             - dropTable:
                 tableName: proposition
@@ -414,7 +420,7 @@ databaseChangeLog:
                             nullable: false
                     - column:
                         name: description
-                        type: varchar(562)
+                        type: varchar(512)
                         constraints:
                             nullable: false
                     - column:
@@ -612,7 +618,7 @@ databaseChangeLog:
                             nullable: false
                     - column:
                         name: email
-                        type: varchar(256)
+                        type: varchar(128)
                         constraints:
                             unique: true
                             nullable: false
@@ -699,21 +705,15 @@ databaseChangeLog:
                 tableName: user_role
                 columns:
                     - column:
-                        name: id
-                        type: uuid
-                        defaultValueComputed: "uuid_generate_v4()"
-                        constraints:
-                            primaryKey: true
-                    - column:
                         name: user_id
                         type: uuid
                         constraints:
-                            nullable: false
+                            primaryKey: true
                     - column:
                         name: role_id
                         type: uuid
                         constraints:
-                            nullable: false
+                            primaryKey: true
                     - column:
                         name: active
                         type: boolean
