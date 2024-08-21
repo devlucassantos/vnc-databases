@@ -1,5 +1,3 @@
-version: '3'
-
 services:
     vnc_liquibase:
         image: liquibase/liquibase
