@@ -188,59 +188,6 @@ databaseChangeLog:
         id: 0000-05
         author: Lucas Santos
         context: all
-        comment: Creating the proposition_type table
-        changes:
-            - createTable:
-                tableName: proposition_type
-                columns:
-                    - column:
-                        name: id
-                        type: uuid
-                        defaultValueComputed: "uuid_generate_v4()"
-                        constraints:
-                            primaryKey: true
-                    - column:
-                        name: description
-                        type: varchar(64)
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: codes
-                        type: varchar(64)
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: color
-                        type: varchar(10)
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: sort_order
-                        type: integer
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: active
-                        type: boolean
-                        defaultValue: true
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: created_at
-                        type: timestamp
-                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: updated_at
-                        type: timestamp
-                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                        constraints:
-                            nullable: false
-    - changeSet:
-        id: 0000-06
-        author: Lucas Santos
-        context: all
         comment: Creating the proposition table
         changes:
             - createTable:
@@ -283,11 +230,6 @@ databaseChangeLog:
                         constraints:
                             nullable: false
                     - column:
-                        name: proposition_type_id
-                        type: uuid
-                        constraints:
-                            nullable: false
-                    - column:
                         name: specific_type
                         type: varchar(128)
                         constraints:
@@ -310,17 +252,11 @@ databaseChangeLog:
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
-                    - addForeignKeyConstraint:
-                        constraintName: proposition_proposition_type_fk
-                        baseTableName: proposition
-                        baseColumnNames: proposition_type_id
-                        referencedTableName: proposition_type
-                        referencedColumnNames: id
         rollback:
             - dropTable:
                 tableName: proposition
     - changeSet:
-        id: 0000-07
+        id: 0000-06
         author: Lucas Santos
         context: all
         comment: Creating the proposition_author table
@@ -394,7 +330,7 @@ databaseChangeLog:
             - dropTable:
                 tableName: proposition_author
     - changeSet:
-        id: 0000-08
+        id: 0000-07
         author: Lucas Santos
         context: all
         comment: Creating the newsletter table
@@ -445,7 +381,7 @@ databaseChangeLog:
             - dropTable:
                 tableName: newsletter
     - changeSet:
-        id: 0000-09
+        id: 0000-08
         author: Lucas Santos
         context: all
         comment: Creating the newsletter_proposition table
@@ -497,6 +433,59 @@ databaseChangeLog:
             - dropTable:
                 tableName: newsletter_proposition
     - changeSet:
+        id: 0000-09
+        author: Lucas Santos
+        context: all
+        comment: Creating the article_type table
+        changes:
+            - createTable:
+                tableName: article_type
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: description
+                        type: varchar(64)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: codes
+                        type: varchar(64)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: color
+                        type: varchar(10)
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: sort_order
+                        type: integer
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: active
+                        type: boolean
+                        defaultValue: true
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: updated_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+    - changeSet:
         id: 0000-10
         author: Lucas Santos
         context: all
@@ -517,6 +506,11 @@ databaseChangeLog:
                     - column:
                         name: newsletter_id
                         type: uuid
+                    - column:
+                        name: article_type_id
+                        type: uuid
+                        constraints:
+                            nullable: false
                     - column:
                         name: reference_date_time
                         type: timestamp
@@ -541,6 +535,12 @@ databaseChangeLog:
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                         constraints:
                             nullable: false
+            - addForeignKeyConstraint:
+                constraintName: article_article_type_fk
+                baseTableName: article
+                baseColumnNames: article_type_id
+                referencedTableName: article_type
+                referencedColumnNames: id
             - addForeignKeyConstraint:
                 constraintName: article_proposition_fk
                 baseTableName: article
@@ -577,6 +577,9 @@ databaseChangeLog:
                         constraints:
                             nullable: false
                     - column:
+                        name: user_id
+                        type: uuid
+                    - column:
                         name: created_at
                         type: timestamp
                         defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
@@ -587,6 +590,12 @@ databaseChangeLog:
                 baseTableName: article_view
                 baseColumnNames: article_id
                 referencedTableName: article
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: article_view_user_fk
+                baseTableName: article_view
+                baseColumnNames: user_id
+                referencedTableName: user
                 referencedColumnNames: id
         rollback:
             - dropTable:
@@ -628,9 +637,14 @@ databaseChangeLog:
                         constraints:
                             nullable: false
                     - column:
+                        name: activation_code
+                        type: varchar(6)
+                        constraints:
+                            nullable: false
+                    - column:
                         name: active
                         type: boolean
-                        defaultValue: false
+                        defaultValue: true
                         constraints:
                             nullable: false
                     - column:
@@ -772,9 +786,9 @@ databaseChangeLog:
                     - column:
                         name: view_later
                         type: boolean
-                        defaultValue: false
-                        constraints:
-                            nullable: false
+                    - column:
+                        name: view_later_set_at
+                        type: timestamp
                     - column:
                         name: active
                         type: boolean

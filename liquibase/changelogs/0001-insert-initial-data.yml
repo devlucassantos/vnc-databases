@@ -19,10 +19,19 @@ databaseChangeLog:
             columns:
                 - column:
                     name: code
+                    value: INACTIVE_USER
+                - column:
+                    name: description
+                    value: Usuário com a conta não ativada
+        - insert:
+            tableName: role
+            columns:
+                - column:
+                    name: code
                     value: USER
                 - column:
                     name: description
-                    value: Usuário
+                    value: Usuário com a conta ativa
     rollback:
         - delete:
             tableName: role
@@ -30,14 +39,29 @@ databaseChangeLog:
     id: 0001-02
     author: Lucas Santos
     context: all
-    comment: Inserting proposition type data
+    comment: Inserting article_type data
     changes:
         - insert:
-            tableName: proposition_type
+            tableName: article_type
             columns:
                 - column:
                     name: description
-                    value: Projeto de Lei
+                    value: Boletins
+                - column:
+                    name: codes
+                    value: newsletter
+                - column:
+                    name: color
+                    value: '#0047AB'
+                - column:
+                    name: sort_order
+                    value: 1
+        - insert:
+            tableName: article_type
+            columns:
+                - column:
+                    name: description
+                    value: Projetos de Lei
                 - column:
                     name: codes
                     value: 139
@@ -46,13 +70,13 @@ databaseChangeLog:
                     value: '#C4170C'
                 - column:
                     name: sort_order
-                    value: 1
+                    value: 2
         - insert:
-            tableName: proposition_type
+            tableName: article_type
             columns:
                 - column:
                     name: description
-                    value: Medida Provisória
+                    value: Medidas Provisórias
                 - column:
                     name: codes
                     value: 291
@@ -61,13 +85,13 @@ databaseChangeLog:
                     value: '#E3672B'
                 - column:
                     name: sort_order
-                    value: 2
+                    value: 3
         -   insert:
-                tableName: proposition_type
+                tableName: article_type
                 columns:
                 - column:
                     name: description
-                    value: Proposta de Emenda à Constituição
+                    value: Propostas de Emenda à Constituição
                 - column:
                     name: codes
                     value: 136
@@ -76,13 +100,13 @@ databaseChangeLog:
                     value: '#06AA48'
                 - column:
                     name: sort_order
-                    value: 3
+                    value: 4
         - insert:
-            tableName: proposition_type
+            tableName: article_type
             columns:
                 - column:
                     name: description
-                    value: Projeto de Lei Complementar
+                    value: Projetos de Lei Complementar
                 - column:
                     name: codes
                     value: 140
@@ -91,13 +115,13 @@ databaseChangeLog:
                     value: '#1E4C9A'
                 - column:
                     name: sort_order
-                    value: 4
+                    value: 5
         - insert:
-            tableName: proposition_type
+            tableName: article_type
             columns:
                 - column:
                     name: description
-                    value: Projeto de Decreto Legislativo
+                    value: Projetos de Decreto Legislativo
                 - column:
                     name: codes
                     value: 557
@@ -106,13 +130,13 @@ databaseChangeLog:
                     value: '#006767'
                 - column:
                     name: sort_order
-                    value: 5
+                    value: 6
         - insert:
-            tableName: proposition_type
+            tableName: article_type
             columns:
                 - column:
                     name: description
-                    value: Emenda de Plenário
+                    value: Emendas de Plenário
                 - column:
                     name: codes
                     value: 870
@@ -121,22 +145,22 @@ databaseChangeLog:
                     value: '#5001B3'
                 - column:
                     name: sort_order
-                    value: 6
+                    value: 7
         - insert:
-            tableName: proposition_type
+            tableName: article_type
             columns:
                 - column:
                     name: description
                     value: Outras Proposições
                 - column:
                     name: codes
-                    value: ''
+                    value: default_option
                 - column:
                     name: color
                     value: '#A5147D'
                 - column:
                     name: sort_order
-                    value: 7
+                    value: 8
     rollback:
         - delete:
             tableName: proposition_type
