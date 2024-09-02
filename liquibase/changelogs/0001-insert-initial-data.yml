@@ -163,4 +163,4 @@ databaseChangeLog:
                     value: 8
     rollback:
         - delete:
-            tableName: proposition_type
+            tableName: article_type
