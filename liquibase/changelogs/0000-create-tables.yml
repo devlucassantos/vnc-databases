@@ -560,50 +560,6 @@ databaseChangeLog:
         id: 0000-11
         author: Lucas Santos
         context: all
-        comment: Creating the article_view table
-        changes:
-            - createTable:
-                tableName: article_view
-                columns:
-                    - column:
-                        name: id
-                        type: uuid
-                        defaultValueComputed: "uuid_generate_v4()"
-                        constraints:
-                            primaryKey: true
-                    - column:
-                        name: article_id
-                        type: uuid
-                        constraints:
-                            nullable: false
-                    - column:
-                        name: user_id
-                        type: uuid
-                    - column:
-                        name: created_at
-                        type: timestamp
-                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
-                        constraints:
-                            nullable: false
-            - addForeignKeyConstraint:
-                constraintName: article_view_article_fk
-                baseTableName: article_view
-                baseColumnNames: article_id
-                referencedTableName: article
-                referencedColumnNames: id
-            - addForeignKeyConstraint:
-                constraintName: article_view_user_fk
-                baseTableName: article_view
-                baseColumnNames: user_id
-                referencedTableName: user
-                referencedColumnNames: id
-        rollback:
-            - dropTable:
-                tableName: article_view
-    - changeSet:
-        id: 0000-12
-        author: Lucas Santos
-        context: all
         comment: Creating the user table
         changes:
             - createTable:
@@ -663,7 +619,7 @@ databaseChangeLog:
             - dropTable:
                 tableName: user
     - changeSet:
-        id: 0000-13
+        id: 0000-12
         author: Lucas Santos
         context: all
         comment: Creating the role table
@@ -710,7 +666,7 @@ databaseChangeLog:
             - dropTable:
                 tableName: role
     - changeSet:
-        id: 0000-14
+        id: 0000-13
         author: Lucas Santos
         context: all
         comment: Creating the user_role table
@@ -762,7 +718,7 @@ databaseChangeLog:
             - dropTable:
                 tableName: user_role
     - changeSet:
-        id: 0000-15
+        id: 0000-14
         author: Lucas Santos
         context: all
         comment: Creating the user_article table
@@ -822,3 +778,47 @@ databaseChangeLog:
         rollback:
             - dropTable:
                 tableName: user_article
+    - changeSet:
+        id: 0000-15
+        author: Lucas Santos
+        context: all
+        comment: Creating the article_view table
+        changes:
+            - createTable:
+                tableName: article_view
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        defaultValueComputed: "uuid_generate_v4()"
+                        constraints:
+                            primaryKey: true
+                    - column:
+                        name: article_id
+                        type: uuid
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: user_id
+                        type: uuid
+                    - column:
+                        name: created_at
+                        type: timestamp
+                        defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                        constraints:
+                            nullable: false
+            - addForeignKeyConstraint:
+                constraintName: article_view_article_fk
+                baseTableName: article_view
+                baseColumnNames: article_id
+                referencedTableName: article
+                referencedColumnNames: id
+            - addForeignKeyConstraint:
+                constraintName: article_view_user_fk
+                baseTableName: article_view
+                baseColumnNames: user_id
+                referencedTableName: user
+                referencedColumnNames: id
+        rollback:
+            - dropTable:
+                tableName: article_view
