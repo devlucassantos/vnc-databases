@@ -1,0 +1,14 @@
+databaseChangeLog:
+- changeSet:
+    id: 0002-01
+    author: Lucas Santos
+    context: all
+    comment: Removing non-null constraint from proposition image column
+    changes:
+        - dropNotNullConstraint:
+            tableName: proposition
+            columnName: image_url
+    rollback:
+        - addNotNullConstraint:
+            tableName: proposition
+            columnName: image_url
