@@ -2,7 +2,7 @@
 
 🌍 *[English](README.md) ∙ [Português](README_pt.md)*
 
-`vnc-databases` is the repository responsible for the data infrastructure of the [Você na Câmara (VNC)](#você-na-câmara-vnc)
+`vnc-databases` is the service responsible for the data infrastructure of the [Você na Câmara (VNC)](#você-na-câmara-vnc)
 platform.  In this repository you will find all the containers needed to run all the databases of the platform, therefore
 being a prerequisite to run all Você na Câmara software locally.
 
