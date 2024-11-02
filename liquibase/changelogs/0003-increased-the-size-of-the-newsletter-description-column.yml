@@ -1,0 +1,16 @@
+databaseChangeLog:
+- changeSet:
+    id: 0003-01
+    author: Lucas Santos
+    context: all
+    comment: Increased the size of the newsletter description column
+    changes:
+        - modifyDataType:
+            tableName: newsletter
+            columnName: description
+            newDataType: varchar(1024)
+    rollback:
+        - modifyDataType:
+            tableName: newsletter
+            columnName: description
+            newDataType: varchar(512)
