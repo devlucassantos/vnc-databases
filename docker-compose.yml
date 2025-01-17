@@ -10,10 +10,12 @@ services:
             POSTGRES_DB: vnc_postgresql
             POSTGRES_USER: vnc_postgresql_user
             POSTGRES_PASSWORD: vnc_d4tab4s&
-            LIQUIBASE_COMMAND_URL: jdbc:postgresql://host.docker.internal:5435/vnc_postgresql
+            LIQUIBASE_COMMAND_URL: jdbc:postgresql://vnc_postgresql:5432/vnc_postgresql
             LIQUIBASE_COMMAND_CONTEXTS: all
         depends_on:
             - vnc_postgresql
+        networks:
+            - vnc_network
     vnc_postgresql:
         image: postgres
         container_name: vnc_postgresql
@@ -24,6 +26,8 @@ services:
             POSTGRES_PASSWORD: vnc_d4tab4s&
         ports:
             - "5435:5432"
+        networks:
+            - vnc_network
     vnc_redis:
         image: redis
         container_name: vnc_redis
@@ -33,6 +37,8 @@ services:
         command: [ "redis-server", "--requirepass", "vnc_d4tab4s&" ]
         ports:
             - "6382:6379"
+        networks:
+            - vnc_network
 
 networks:
     vnc_network:

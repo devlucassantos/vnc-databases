@@ -1,0 +1,758 @@
+databaseChangeLog:
+- changeSet:
+    id: 0004-01
+    author: Lucas Santos
+    context: all
+    comment: Creating the legislative_body_type table
+    changes:
+        - createTable:
+            tableName: legislative_body_type
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: code
+                    type: integer
+                    constraints:
+                        nullable: false
+                - column:
+                    name: description
+                    type: varchar(128)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+    rollback:
+        - dropTable:
+            tableName: legislative_body_type
+- changeSet:
+    id: 0004-02
+    author: Lucas Santos
+    context: all
+    comment: Creating the legislative_body table
+    changes:
+        - createTable:
+            tableName: legislative_body
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: code
+                    type: integer
+                    constraints:
+                        nullable: false
+                - column:
+                    name: name
+                    type: varchar(256)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: acronym
+                    type: varchar(32)
+                - column:
+                    name: legislative_body_type_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+        - addForeignKeyConstraint:
+            constraintName: legislative_body_legislative_body_type_fk
+            baseTableName: legislative_body
+            baseColumnNames: legislative_body_type_id
+            referencedTableName: legislative_body_type
+            referencedColumnNames: id
+    rollback:
+        - dropTable:
+            tableName: legislative_body
+- changeSet:
+    id: 0004-03
+    author: Lucas Santos
+    context: all
+    comment: Creating the voting table
+    changes:
+        - createTable:
+            tableName: voting
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: code
+                    type: varchar(16)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: result
+                    type: varchar(128)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: result_announced_at
+                    type: timestamp
+                    constraints:
+                        nullable: false
+                - column:
+                    name: is_approved
+                    type: boolean
+                    constraints:
+                        nullable: false
+                - column:
+                    name: legislative_body_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: main_proposition_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+        - addForeignKeyConstraint:
+            constraintName: voting_proposition_fk
+            baseTableName: voting
+            baseColumnNames: main_proposition_id
+            referencedTableName: proposition
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: voting_legislative_body_fk
+            baseTableName: voting
+            baseColumnNames: legislative_body_id
+            referencedTableName: legislative_body
+            referencedColumnNames: id
+    rollback:
+        - dropTable:
+            tableName: voting
+- changeSet:
+    id: 0004-04
+    author: Lucas Santos
+    context: all
+    comment: Creating the proposition_related_to_voting table
+    changes:
+    - createTable:
+        tableName: proposition_related_to_voting
+        columns:
+            - column:
+                name: proposition_id
+                type: uuid
+                constraints:
+                    primaryKey: true
+            - column:
+                name: voting_id
+                type: uuid
+                constraints:
+                    primaryKey: true
+            - column:
+                name: active
+                type: boolean
+                defaultValue: true
+                constraints:
+                    nullable: false
+            - column:
+                name: created_at
+                type: timestamp
+                defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                constraints:
+                    nullable: false
+            - column:
+                name: updated_at
+                type: timestamp
+                defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                constraints:
+                    nullable: false
+    - addForeignKeyConstraint:
+        constraintName: proposition_related_to_voting_proposition_fk
+        baseTableName: proposition_related_to_voting
+        baseColumnNames: proposition_id
+        referencedTableName: proposition
+        referencedColumnNames: id
+    - addForeignKeyConstraint:
+        constraintName: proposition_related_to_voting_voting_fk
+        baseTableName: proposition_related_to_voting
+        baseColumnNames: voting_id
+        referencedTableName: voting
+        referencedColumnNames: id
+    rollback:
+        - dropTable:
+            tableName: proposition_related_to_voting
+- changeSet:
+    id: 0004-05
+    author: Lucas Santos
+    context: all
+    comment: Creating the proposition_affected_by_voting table
+    changes:
+    - createTable:
+        tableName: proposition_affected_by_voting
+        columns:
+            - column:
+                name: proposition_id
+                type: uuid
+                constraints:
+                    primaryKey: true
+            - column:
+                name: voting_id
+                type: uuid
+                constraints:
+                    primaryKey: true
+            - column:
+                name: active
+                type: boolean
+                defaultValue: true
+                constraints:
+                    nullable: false
+            - column:
+                name: created_at
+                type: timestamp
+                defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                constraints:
+                    nullable: false
+            - column:
+                name: updated_at
+                type: timestamp
+                defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                constraints:
+                    nullable: false
+    - addForeignKeyConstraint:
+        constraintName: proposition_affected_by_voting_proposition_fk
+        baseTableName: proposition_affected_by_voting
+        baseColumnNames: proposition_id
+        referencedTableName: proposition
+        referencedColumnNames: id
+    - addForeignKeyConstraint:
+        constraintName: proposition_affected_by_voting_voting_fk
+        baseTableName: proposition_affected_by_voting
+        baseColumnNames: voting_id
+        referencedTableName: voting
+        referencedColumnNames: id
+    rollback:
+        - dropTable:
+            tableName: proposition_affected_by_voting
+- changeSet:
+    id: 0004-06
+    author: Lucas Santos
+    context: all
+    comment: Creating the event_type table
+    changes:
+        - createTable:
+            tableName: event_type
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: description
+                    type: varchar(128)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: codes
+                    type: varchar(64)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: color
+                    type: varchar(10)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+    rollback:
+        - dropTable:
+            tableName: event_type
+- changeSet:
+    id: 0004-07
+    author: Lucas Santos
+    context: all
+    comment: Creating the event_situation table
+    changes:
+        - createTable:
+            tableName: event_situation
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: description
+                    type: varchar(128)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: codes
+                    type: varchar(64)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: color
+                    type: varchar(10)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+    rollback:
+        - dropTable:
+            tableName: event_situation
+- changeSet:
+    id: 0004-08
+    author: Lucas Santos
+    context: all
+    comment: Creating the event table
+    changes:
+        - createTable:
+            tableName: event
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: code
+                    type: integer
+                    constraints:
+                        nullable: false
+                - column:
+                    name: title
+                    type: varchar(256)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: description
+                    type: text
+                    constraints:
+                        nullable: false
+                - column:
+                    name: starts_at
+                    type: timestamp
+                    constraints:
+                        nullable: false
+                - column:
+                    name: ends_at
+                    type: timestamp
+                - column:
+                    name: location
+                    type: varchar(256)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: is_internal
+                    type: boolean
+                    constraints:
+                        nullable: false
+                - column:
+                    name: video_url
+                    type: varchar(256)
+                - column:
+                    name: specific_type
+                    type: varchar(64)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: event_type_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: specific_situation
+                    type: varchar(64)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: event_situation_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+        - addForeignKeyConstraint:
+            constraintName: event_event_situation_fk
+            baseTableName: event
+            baseColumnNames: event_situation_id
+            referencedTableName: event_situation
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: event_event_type_fk
+            baseTableName: event
+            baseColumnNames: event_type_id
+            referencedTableName: event_type
+            referencedColumnNames: id
+    rollback:
+        - dropTable:
+            tableName: event
+- changeSet:
+    id: 0004-09
+    author: Lucas Santos
+    context: all
+    comment: Creating the event_legislative_body table
+    changes:
+    - createTable:
+        tableName: event_legislative_body
+        columns:
+            - column:
+                name: event_id
+                type: uuid
+                constraints:
+                    primaryKey: true
+            - column:
+                name: legislative_body_id
+                type: uuid
+                constraints:
+                    primaryKey: true
+            - column:
+                name: active
+                type: boolean
+                defaultValue: true
+                constraints:
+                    nullable: false
+            - column:
+                name: created_at
+                type: timestamp
+                defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                constraints:
+                    nullable: false
+            - column:
+                name: updated_at
+                type: timestamp
+                defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                constraints:
+                    nullable: false
+    - addForeignKeyConstraint:
+        constraintName: event_legislative_body_event_fk
+        baseTableName: event_legislative_body
+        baseColumnNames: event_id
+        referencedTableName: event
+        referencedColumnNames: id
+    - addForeignKeyConstraint:
+        constraintName: event_legislative_body_legislative_body_fk
+        baseTableName: event_legislative_body
+        baseColumnNames: legislative_body_id
+        referencedTableName: legislative_body
+        referencedColumnNames: id
+    rollback:
+        - dropTable:
+            tableName: event_legislative_body
+- changeSet:
+    id: 0004-10
+    author: Lucas Santos
+    context: all
+    comment: Creating the event_requirement table
+    changes:
+    - createTable:
+        tableName: event_requirement
+        columns:
+            - column:
+                name: event_id
+                type: uuid
+                constraints:
+                    primaryKey: true
+            - column:
+                name: proposition_id
+                type: uuid
+                constraints:
+                    primaryKey: true
+            - column:
+                name: active
+                type: boolean
+                defaultValue: true
+                constraints:
+                    nullable: false
+            - column:
+                name: created_at
+                type: timestamp
+                defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                constraints:
+                    nullable: false
+            - column:
+                name: updated_at
+                type: timestamp
+                defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                constraints:
+                    nullable: false
+    - addForeignKeyConstraint:
+        constraintName: event_requirement_event_fk
+        baseTableName: event_requirement
+        baseColumnNames: event_id
+        referencedTableName: event
+        referencedColumnNames: id
+    - addForeignKeyConstraint:
+        constraintName: event_requirement_proposition_fk
+        baseTableName: event_requirement
+        baseColumnNames: proposition_id
+        referencedTableName: proposition
+        referencedColumnNames: id
+    rollback:
+        - dropTable:
+            tableName: event_requirement
+- changeSet:
+    id: 0004-11
+    author: Lucas Santos
+    context: all
+    comment: Creating the agenda_item_regime table
+    changes:
+        - createTable:
+            tableName: agenda_item_regime
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: code
+                    type: integer
+                    constraints:
+                        nullable: false
+                - column:
+                    name: description
+                    type: varchar(128)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+    rollback:
+        - dropTable:
+            tableName: agenda_item_regime
+- changeSet:
+    id: 0004-12
+    author: Lucas Santos
+    context: all
+    comment: Creating the event_agenda_item table
+    changes:
+        - createTable:
+            tableName: event_agenda_item
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: title
+                    type: varchar(256)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: situation
+                    type: varchar(1024)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: topic
+                    type: varchar(256)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: agenda_item_regime_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: rapporteur_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: proposition_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: related_proposition_id
+                    type: uuid
+                - column:
+                    name: voting_id
+                    type: uuid
+                - column:
+                    name: event_id
+                    type: uuid
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+        - addForeignKeyConstraint:
+            constraintName: event_agenda_item_agenda_item_regime_fk
+            baseTableName: event_agenda_item
+            baseColumnNames: agenda_item_regime_id
+            referencedTableName: agenda_item_regime
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: event_agenda_item_deputy_fk
+            baseTableName: event_agenda_item
+            baseColumnNames: rapporteur_id
+            referencedTableName: deputy
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: event_agenda_item_proposition_fk
+            baseTableName: event_agenda_item
+            baseColumnNames: proposition_id
+            referencedTableName: proposition
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: event_agenda_item_related_proposition_fk
+            baseTableName: event_agenda_item
+            baseColumnNames: related_proposition_id
+            referencedTableName: proposition
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: event_agenda_item_voting_fk
+            baseTableName: event_agenda_item
+            baseColumnNames: voting_id
+            referencedTableName: voting
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: event_agenda_item_event_fk
+            baseTableName: event_agenda_item
+            baseColumnNames: event_id
+            referencedTableName: event
+            referencedColumnNames: id
+    rollback:
+        - dropTable:
+            tableName: event_agenda_item
