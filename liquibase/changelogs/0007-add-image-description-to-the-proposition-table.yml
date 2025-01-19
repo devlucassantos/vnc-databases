@@ -1,0 +1,16 @@
+databaseChangeLog:
+- changeSet:
+    id: 0007-01
+    author: Lucas Santos
+    context: all
+    comment: Adding the image_description column to the proposition table
+    changes:
+        - addColumn:
+            tableName: proposition
+            columns:
+                name: image_description
+                type: text
+    rollback:
+        - dropColumn:
+            tableName: proposition
+            columnName: image_description

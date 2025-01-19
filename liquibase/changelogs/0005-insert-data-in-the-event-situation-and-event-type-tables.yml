@@ -1,0 +1,175 @@
+databaseChangeLog:
+- changeSet:
+    id: 0005-01
+    author: Lucas Santos
+    context: all
+    comment: Inserting event_situation data
+    changes:
+        - insert:
+            tableName: event_situation
+            columns:
+                - column:
+                    name: description
+                    value: Não Confirmado
+                - column:
+                    name: codes
+                    value: 1
+                - column:
+                    name: color
+                    value: '#5001B3'
+        - insert:
+            tableName: event_situation
+            columns:
+                - column:
+                    name: description
+                    value: Convocado
+                - column:
+                    name: codes
+                    value: 2
+                - column:
+                    name: color
+                    value: '#007BFF'
+        - insert:
+            tableName: event_situation
+            columns:
+                - column:
+                    name: description
+                    value: Em Andamento
+                - column:
+                    name: codes
+                    value: 3
+                - column:
+                    name: color
+                    value: '#06AA48'
+        -   insert:
+                tableName: event_situation
+                columns:
+                - column:
+                    name: description
+                    value: Encerrado
+                - column:
+                    name: codes
+                    value: 4,7,8,9
+                - column:
+                    name: color
+                    value: '#0047AB'
+        - insert:
+            tableName: event_situation
+            columns:
+                - column:
+                    name: description
+                    value: Cancelado
+                - column:
+                    name: codes
+                    value: 5
+                - column:
+                    name: color
+                    value: '#C4170C'
+        - insert:
+            tableName: event_situation
+            columns:
+                - column:
+                    name: description
+                    value: Suspenso
+                - column:
+                    name: codes
+                    value: 6
+                - column:
+                    name: color
+                    value: '#E3672B'
+        - insert:
+            tableName: event_situation
+            columns:
+                - column:
+                    name: description
+                    value: Agendado
+                - column:
+                    name: codes
+                    value: 130
+                - column:
+                    name: color
+                    value: '#FFC72D'
+        - insert:
+            tableName: event_situation
+            columns:
+                - column:
+                    name: description
+                    value: Indefinido
+                - column:
+                    name: codes
+                    value: default_option
+                - column:
+                    name: color
+                    value: '#969696'
+    rollback:
+        - delete:
+            tableName: event_situation
+- changeSet:
+    id: 0005-02
+    author: Lucas Santos
+    context: all
+    comment: Inserting event_type data
+    changes:
+        - insert:
+            tableName: event_type
+            columns:
+                - column:
+                    name: description
+                    value: Sessão Deliberativa
+                - column:
+                    name: codes
+                    value: 110,204
+                - column:
+                    name: color
+                    value: '#C4170C'
+        - insert:
+            tableName: event_type
+            columns:
+                - column:
+                    name: description
+                    value: Reunião Deliberativa
+                - column:
+                    name: codes
+                    value: 112
+                - column:
+                    name: color
+                    value: '#006767'
+        - insert:
+            tableName: event_type
+            columns:
+                - column:
+                    name: description
+                    value: Comissão Geral
+                - column:
+                    name: codes
+                    value: 191
+                - column:
+                    name: color
+                    value: '#0047AB'
+        - insert:
+            tableName: event_type
+            columns:
+                - column:
+                    name: description
+                    value: Audiência Pública
+                - column:
+                    name: codes
+                    value: 120,125
+                - column:
+                    name: color
+                    value: '#5001B3'
+        - insert:
+            tableName: event_type
+            columns:
+                - column:
+                    name: description
+                    value: Outros Eventos
+                - column:
+                    name: codes
+                    value: default_option
+                - column:
+                    name: color
+                    value: '#A5147D'
+    rollback:
+        - delete:
+            tableName: event_type

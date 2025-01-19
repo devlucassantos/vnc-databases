@@ -1,0 +1,130 @@
+databaseChangeLog:
+- changeSet:
+    id: 0006-01
+    author: Lucas Santos
+    context: all
+    comment: Creating the external_author_type table
+    changes:
+        - createTable:
+            tableName: external_author_type
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: code
+                    type: integer
+                    constraints:
+                        nullable: false
+                - column:
+                    name: description
+                    type: varchar(128)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+    rollback:
+        - dropTable:
+            tableName: external_author_type
+- changeSet:
+    id: 0006-02
+    author: Lucas Santos
+    context: all
+    comment: Adding the external_author_type_id column to the external_author table
+    changes:
+        - addColumn:
+            tableName: external_author
+            columns:
+                name: external_author_type_id
+                type: uuid
+    rollback:
+        - dropColumn:
+            tableName: external_author
+            columnName: external_author_type_id
+- changeSet:
+    id: 0006-03
+    author: Lucas Santos
+    context: all
+    comment: Migrating the external author type to the external_author_type table
+    changes:
+        - sql:
+            sql:
+                INSERT INTO external_author_type (code, description)
+                    SELECT DISTINCT 0, type FROM external_author
+    rollback:
+        - sql:
+            sql:
+                DELETE FROM external_author_type
+- changeSet:
+    id: 0006-04
+    author: Lucas Santos
+    context: all
+    comment: Relating the external_author_type_id column to the external_author table
+    changes:
+        - sql:
+            sql:
+                UPDATE external_author SET external_author_type_id = external_author_type.id
+                FROM external_author_type WHERE external_author.type = external_author_type.description
+    rollback:
+        - sql:
+            sql:
+                UPDATE external_author SET external_author_type_id = NULL
+- changeSet:
+    id: 0006-05
+    author: Lucas Santos
+    context: all
+    comment: Adding constraints for the external_author_type_id column of the external_author table
+    changes:
+        - addNotNullConstraint:
+            tableName: external_author
+            columnName: external_author_type_id
+        - addForeignKeyConstraint:
+            constraintName: external_author_external_author_type_fk
+            baseTableName: external_author
+            baseColumnNames: external_author_type_id
+            referencedTableName: external_author_type
+            referencedColumnNames: id
+    rollback:
+        - dropNotNullConstraint:
+            tableName: external_author
+            columnName: external_author_type_id
+        - dropForeignKeyConstraint:
+            baseTableName: external_author
+            constraintName: external_author_external_author_type_fk
+- changeSet:
+    id: 0006-06
+    author: Lucas Santos
+    context: all
+    comment: Removing the type column from the external_author table
+    changes:
+        - dropColumn:
+            tableName: external_author
+            columnName: type
+    rollback:
+        - addColumn:
+            tableName: external_author
+            columns:
+                name: type
+                type: varchar(128)
+                value: RESTORED
+                constraints:
+                    nullable: false
