@@ -1,0 +1,48 @@
+databaseChangeLog:
+- changeSet:
+    id: 0018-01
+    author: Lucas Santos
+    context: all
+    comment: Adding the rapporteur_party_id column to the event_agenda_item table
+    changes:
+        - addColumn:
+            tableName: event_agenda_item
+            columns:
+                name: rapporteur_party_id
+                type: uuid
+    rollback:
+        - dropColumn:
+            tableName: event_agenda_item
+            columnName: rapporteur_party_id
+- changeSet:
+    id: 0018-02
+    author: Lucas Santos
+    context: all
+    comment: Registering the rapporteur's party
+    changes:
+        - sql:
+            sql:
+                UPDATE event_agenda_item SET rapporteur_party_id = deputy.party_id,
+                    updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                FROM deputy WHERE deputy.id = event_agenda_item.rapporteur_id
+    rollback:
+        - sql:
+            sql:
+                UPDATE event_agenda_item SET rapporteur_party_id = null,
+                    updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+- changeSet:
+    id: 0018-03
+    author: Lucas Santos
+    context: all
+    comment: Adding the foreign key constraint for the rapporteur_party_id column of the event_agenda_item table
+    changes:
+    - addForeignKeyConstraint:
+        constraintName: event_agenda_item_party_fk
+        baseTableName: event_agenda_item
+        baseColumnNames: rapporteur_party_id
+        referencedTableName: party
+        referencedColumnNames: id
+    rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: event_agenda_item
+            constraintName: event_agenda_item_party_fk

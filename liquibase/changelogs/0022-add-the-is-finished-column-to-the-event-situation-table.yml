@@ -1,0 +1,34 @@
+databaseChangeLog:
+- changeSet:
+    id: 0022-01
+    author: Lucas Santos
+    context: all
+    comment: Adding the is_finished column to the event_situation table
+    changes:
+        - addColumn:
+            tableName: event_situation
+            columns:
+                name: is_finished
+                type: boolean
+                value: false
+                constraints:
+                    nullable: false
+    rollback:
+        - dropColumn:
+            tableName: event_situation
+            columnName: is_finished
+- changeSet:
+    id: 0022-02
+    author: Lucas Santos
+    context: all
+    comment: Changing the value of the is_finished column for event situations considered finished
+    changes:
+        - sql:
+            sql:
+                UPDATE event_situation SET is_finished = true, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE description IN ('Encerrado', 'Cancelado')
+    rollback:
+        - sql:
+            sql:
+                UPDATE event_situation SET is_finished = false, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE description IN ('Encerrado', 'Cancelado')

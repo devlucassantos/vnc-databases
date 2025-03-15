@@ -1,0 +1,173 @@
+databaseChangeLog:
+- changeSet:
+    id: 0017-01
+    author: Lucas Santos
+    context: all
+    comment: Adding auxiliary column to identify the record that will be related to the article table
+    changes:
+        - addColumn:
+            tableName: article
+            columns:
+                name: auxiliary_id
+                type: uuid
+    rollback:
+        - dropColumn:
+            tableName: article
+            columnName: auxiliary_id
+- changeSet:
+    id: 0017-02
+    author: Lucas Santos
+    context: all
+    comment: Adding the article_id column to the voting table
+    changes:
+    - addColumn:
+        tableName: voting
+        columns:
+            name: article_id
+            type: uuid
+    rollback:
+        - dropColumn:
+            tableName: voting
+            columnName: article_id
+- changeSet:
+    id: 0017-03
+    author: Lucas Santos
+    context: all
+    comment: Creating voting articles
+    changes:
+        - sql:
+            sql:
+                INSERT INTO article (article_type_id, reference_date_time, active, auxiliary_id)
+                    SELECT (SELECT id FROM article_type WHERE active = true AND codes = 'voting'), created_at,
+                        active, id
+                    FROM voting
+    rollback:
+        - sql:
+            sql:
+                DELETE FROM article WHERE id IN (SELECT id FROM voting)
+- changeSet:
+    id: 0017-04
+    author: Lucas Santos
+    context: all
+    comment: Adding the relationship between the voting and article tables
+    changes:
+        - sql:
+            sql:
+                UPDATE voting SET article_id = article.id, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                FROM article WHERE voting.id = article.auxiliary_id
+    rollback:
+        - sql:
+            sql:
+                UPDATE voting SET article_id = NULL, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+- changeSet:
+    id: 0017-05
+    author: Lucas Santos
+    context: all
+    comment: Adding constraints for the article_id column of the voting table
+    changes:
+        - addNotNullConstraint:
+            tableName: voting
+            columnName: article_id
+        - addForeignKeyConstraint:
+            constraintName: voting_article_fk
+            baseTableName: voting
+            baseColumnNames: article_id
+            referencedTableName: article
+            referencedColumnNames: id
+    rollback:
+        - dropNotNullConstraint:
+            tableName: voting
+            columnName: article_id
+        - dropForeignKeyConstraint:
+            baseTableName: voting
+            constraintName: voting_article_fk
+- changeSet:
+    id: 0017-06
+    author: Lucas Santos
+    context: all
+    comment: Adding the article_id column to the event table
+    changes:
+    - addColumn:
+        tableName: event
+        columns:
+            name: article_id
+            type: uuid
+    rollback:
+        - dropColumn:
+            tableName: event
+            columnName: article_id
+- changeSet:
+    id: 0017-07
+    author: Lucas Santos
+    context: all
+    comment: Creating event articles
+    changes:
+        - sql:
+            sql:
+                INSERT INTO article (article_type_id, reference_date_time, active, auxiliary_id)
+                    SELECT (SELECT id FROM article_type WHERE active = true AND codes = 'event'), created_at,
+                        active, id
+                    FROM event
+    rollback:
+        - sql:
+            sql:
+                DELETE FROM article WHERE id IN (SELECT id FROM event)
+- changeSet:
+    id: 0017-08
+    author: Lucas Santos
+    context: all
+    comment: Adding the relationship between the event and article tables
+    changes:
+        - sql:
+            sql:
+                UPDATE event SET article_id = article.id, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                FROM article WHERE event.id = article.auxiliary_id
+    rollback:
+        - sql:
+            sql:
+                UPDATE event SET article_id = NULL, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+- changeSet:
+    id: 0017-09
+    author: Lucas Santos
+    context: all
+    comment: Adding constraints for the article_id column of the event table
+    changes:
+        - addNotNullConstraint:
+            tableName: event
+            columnName: article_id
+        - addForeignKeyConstraint:
+            constraintName: event_article_fk
+            baseTableName: event
+            baseColumnNames: article_id
+            referencedTableName: article
+            referencedColumnNames: id
+    rollback:
+        - dropNotNullConstraint:
+            tableName: event
+            columnName: article_id
+        - dropForeignKeyConstraint:
+            baseTableName: event
+            constraintName: event_article_fk
+- changeSet:
+    id: 0017-10
+    author: Lucas Santos
+    context: all
+    comment: Removing the auxiliary_id column from the article table
+    changes:
+        - dropColumn:
+            tableName: article
+            columnName: auxiliary_id
+    rollback:
+        - addColumn:
+            tableName: article
+            columns:
+                name: auxiliary_id
+                type: uuid
+        - sql:
+            sql:
+                UPDATE article SET auxiliary_id = voting.id, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                FROM voting WHERE article.id = voting.article_id
+        - sql:
+            sql:
+                UPDATE article SET auxiliary_id = event.id, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                FROM event WHERE article.id = event.article_id

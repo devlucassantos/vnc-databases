@@ -1,0 +1,14 @@
+databaseChangeLog:
+- changeSet:
+    id: 0009-01
+    author: Lucas Santos
+    context: all
+    comment: Removing non-null constraint from voting main proposition column
+    changes:
+        - dropNotNullConstraint:
+            tableName: voting
+            columnName: main_proposition_id
+    rollback:
+        - addNotNullConstraint:
+            tableName: voting
+            columnName: main_proposition_id

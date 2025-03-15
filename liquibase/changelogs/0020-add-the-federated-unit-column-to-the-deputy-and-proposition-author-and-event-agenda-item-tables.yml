@@ -1,0 +1,81 @@
+databaseChangeLog:
+- changeSet:
+    id: 0020-01
+    author: Lucas Santos
+    context: all
+    comment: Adding the federated_unit column to the deputy table
+    changes:
+        - addColumn:
+            tableName: deputy
+            columns:
+                name: federated_unit
+                type: varchar(2)
+                value: ND
+                constraints:
+                    nullable: false
+    rollback:
+        - dropColumn:
+            tableName: deputy
+            columnName: federated_unit
+- changeSet:
+    id: 0020-02
+    author: Lucas Santos
+    context: all
+    comment: Adding the federated_unit column to the proposition_author table
+    changes:
+        - addColumn:
+            tableName: proposition_author
+            columns:
+                name: federated_unit
+                type: varchar(2)
+    rollback:
+        - dropColumn:
+            tableName: proposition_author
+            columnName: federated_unit
+- changeSet:
+    id: 0020-03
+    author: Lucas Santos
+    context: all
+    comment: Updating the proposition author's federated unit from null to ND (Not Defined)
+    changes:
+        - sql:
+            sql:
+                UPDATE proposition_author SET federated_unit = 'ND', updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE deputy_id IS NOT NULL
+    rollback:
+        - sql:
+            sql:
+                UPDATE proposition_author SET federated_unit = NULL, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE deputy_id IS NOT NULL
+- changeSet:
+    id: 0020-04
+    author: Lucas Santos
+    context: all
+    comment: Adding the rapporteur_federated_unit column to the event_agenda_item table
+    changes:
+        - addColumn:
+            tableName: event_agenda_item
+            columns:
+                name: rapporteur_federated_unit
+                type: varchar(2)
+    rollback:
+        - dropColumn:
+            tableName: event_agenda_item
+            columnName: rapporteur_federated_unit
+- changeSet:
+    id: 0020-05
+    author: Lucas Santos
+    context: all
+    comment: Updating the proposition author's federated unit from null to ND (Not Defined)
+    changes:
+        - sql:
+            sql:
+                UPDATE event_agenda_item SET rapporteur_federated_unit = 'ND',
+                    updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE rapporteur_id IS NOT NULL
+    rollback:
+        - sql:
+            sql:
+                UPDATE event_agenda_item SET rapporteur_federated_unit = NULL,
+                    updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE rapporteur_id IS NOT NULL

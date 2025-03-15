@@ -1,0 +1,199 @@
+databaseChangeLog:
+- changeSet:
+    id: 0023-01
+    author: Lucas Santos
+    context: all
+    comment: Creating the proposition_type table
+    changes:
+        - createTable:
+            tableName: proposition_type
+            columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: "uuid_generate_v4()"
+                    constraints:
+                        primaryKey: true
+                - column:
+                    name: description
+                    type: varchar(64)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: codes
+                    type: varchar(64)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: color
+                    type: varchar(10)
+                    constraints:
+                        nullable: false
+                - column:
+                    name: sort_order
+                    type: integer
+                    constraints:
+                        nullable: false
+                - column:
+                    name: active
+                    type: boolean
+                    defaultValue: true
+                    constraints:
+                        nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
+                    constraints:
+                        nullable: false
+    rollback:
+        - dropTable:
+            tableName: proposition_type
+- changeSet:
+    id: 0023-02
+    author: Lucas Santos
+    context: all
+    comment: Inserting proposition_type data
+    changes:
+        - sql:
+            sql:
+                INSERT INTO proposition_type
+                SELECT id, description, codes, color, ROW_NUMBER() OVER (ORDER BY sort_order), active, created_at,
+                    updated_at
+                FROM article_type
+                WHERE codes NOT IN ('event', 'voting', 'newsletter')
+    rollback:
+        - delete:
+            tableName: proposition_type
+- changeSet:
+    id: 0023-03
+    author: Lucas Santos
+    context: all
+    comment: Adding the proposition_type_id column to the proposition table
+    changes:
+        - addColumn:
+            tableName: proposition
+            columns:
+                name: proposition_type_id
+                type: uuid
+    rollback:
+        - dropColumn:
+            tableName: proposition
+            columnName: proposition_type_id
+- changeSet:
+    id: 0023-04
+    author: Lucas Santos
+    context: all
+    comment: Adding the foreign key constraint between the proposition type and proposition tables
+    changes:
+        - sql:
+            sql:
+                UPDATE proposition SET proposition_type_id = article_type.id
+                FROM article
+                    INNER JOIN article_type ON article_type.id = article.article_type_id
+                WHERE proposition.article_id = article.id
+    rollback:
+        - sql:
+            sql:
+                UPDATE proposition SET proposition_type_id = NULL, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+- changeSet:
+    id: 0023-05
+    author: Lucas Santos
+    context: all
+    comment: Adding constraints for the proposition_type_id column of the proposition table
+    changes:
+        - addNotNullConstraint:
+            tableName: proposition
+            columnName: proposition_type_id
+        - addForeignKeyConstraint:
+            constraintName: proposition_proposition_type_fk
+            baseTableName: proposition
+            baseColumnNames: proposition_type_id
+            referencedTableName: proposition_type
+            referencedColumnNames: id
+    rollback:
+        - dropNotNullConstraint:
+            tableName: proposition
+            columnName: proposition_type_id
+        - dropForeignKeyConstraint:
+            baseTableName: proposition
+            constraintName: proposition_proposition_type_fk
+- changeSet:
+    id: 0023-06
+    author: Lucas Santos
+    context: all
+    comment: Adding proposition article type to the article_type table
+    changes:
+    - insert:
+        tableName: article_type
+        columns:
+            - column:
+                name: description
+                value: Proposições
+            - column:
+                name: codes
+                value: proposition
+            - column:
+                name: color
+                value: '#663300'
+            - column:
+                name: sort_order
+                value: 3
+    rollback:
+        - delete:
+            tableName: article_type
+            where: "codes = 'proposition'"
+- changeSet:
+    id: 0023-07
+    author: Lucas Santos
+    context: all
+    comment: Updating the article type of propositions in the article table
+    changes:
+        - sql:
+            sql:
+                UPDATE article SET article_type_id = (SELECT id FROM article_type WHERE codes = 'proposition')
+                FROM article_type WHERE article.article_type_id = article_type.id AND
+                    article_type.codes NOT IN ('event', 'voting', 'newsletter')
+    rollback:
+        - sql:
+            sql:
+                UPDATE article SET article_type_id =
+                    (SELECT proposition_type.id FROM proposition_type
+                        INNER JOIN proposition ON proposition.proposition_type_id = proposition_type.id
+                    WHERE proposition.article_id = article.id)
+                FROM article_type WHERE article.article_type_id = article_type.id AND article_type.codes = 'proposition'
+- changeSet:
+    id: 0023-08
+    author: Lucas Santos
+    context: all
+    comment: Removing proposition types from the article_types table
+    changes:
+        - sql:
+            sql:
+                DELETE FROM article_type WHERE codes NOT IN ('event', 'voting', 'proposition', 'newsletter')
+    rollback:
+        - sql:
+            sql:
+                INSERT INTO article_type
+                SELECT id, description, codes, color, ROW_NUMBER() OVER (ORDER BY sort_order) + 3, active, created_at,
+                    updated_at
+                FROM proposition_type
+- changeSet:
+    id: 0023-09
+    author: Lucas Santos
+    context: all
+    comment: Reordering the records in the article_type table
+    changes:
+        - sql:
+            sql:
+                UPDATE article_type SET sort_order = 4 WHERE codes = 'newsletter'
+    rollback:
+        - sql:
+            sql:
+                UPDATE article_type SET sort_order = 3 WHERE codes = 'newsletter'

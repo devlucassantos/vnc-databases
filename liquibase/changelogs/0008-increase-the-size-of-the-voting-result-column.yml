@@ -1,0 +1,16 @@
+databaseChangeLog:
+- changeSet:
+    id: 0008-01
+    author: Lucas Santos
+    context: all
+    comment: Increasing the size of the voting result column
+    changes:
+        - modifyDataType:
+            tableName: voting
+            columnName: result
+            newDataType: varchar(1024)
+    rollback:
+        - modifyDataType:
+            tableName: voting
+            columnName: result
+            newDataType: varchar(128)

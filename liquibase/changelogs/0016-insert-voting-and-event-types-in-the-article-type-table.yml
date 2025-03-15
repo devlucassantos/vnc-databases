@@ -1,0 +1,56 @@
+databaseChangeLog:
+- changeSet:
+    id: 0016-01
+    author: Lucas Santos
+    context: all
+    comment: Changing the value of the sort_order column to add the new types before the types already registered
+    changes:
+        - sql:
+            sql:
+                UPDATE article_type SET sort_order = sort_order + 2, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE active = true
+    rollback:
+        - sql:
+            sql:
+                UPDATE article_type SET sort_order = sort_order - 2, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE active = true
+- changeSet:
+    id: 0016-02
+    author: Lucas Santos
+    context: all
+    comment: Inserting voting and event types into the article_type table
+    changes:
+        - insert:
+            tableName: article_type
+            columns:
+                - column:
+                    name: description
+                    value: Eventos
+                - column:
+                    name: codes
+                    value: event
+                - column:
+                    name: color
+                    value: '#007BFF'
+                - column:
+                    name: sort_order
+                    value: 1
+        - insert:
+            tableName: article_type
+            columns:
+                - column:
+                    name: description
+                    value: Votações
+                - column:
+                    name: codes
+                    value: voting
+                - column:
+                    name: color
+                    value: '#FFC72D'
+                - column:
+                    name: sort_order
+                    value: 2
+    rollback:
+        - delete:
+            tableName: article_type
+            where: "codes = 'event' OR codes = 'voting'"

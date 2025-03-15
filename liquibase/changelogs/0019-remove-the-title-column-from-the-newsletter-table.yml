@@ -1,0 +1,22 @@
+databaseChangeLog:
+- changeSet:
+    id: 0019-01
+    author: Lucas Santos
+    context: all
+    comment: Removing the title column from the newsletter table
+    changes:
+        - dropColumn:
+            tableName: newsletter
+            columnName: title
+    rollback:
+        - addColumn:
+            tableName: newsletter
+            columns:
+                name: title
+                type: varchar(256)
+        - sql:
+            sql:
+                UPDATE newsletter SET title = 'Boletim do dia ' || TO_CHAR(reference_date, 'DD/MM/YYYY')
+        - addNotNullConstraint:
+            tableName: newsletter
+            columnName: title
