@@ -1,0 +1,16 @@
+databaseChangeLog:
+- changeSet:
+    id: 0026-01
+    author: Lucas Santos
+    context: all
+    comment: Updating the voting color in the article type table
+    changes:
+        - sql:
+            sql:
+                UPDATE article_type SET color = '#006767', updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE codes = 'voting'
+    rollback:
+        - sql:
+            sql:
+                UPDATE article_type SET color = '#FFC72D', updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE codes = 'voting'

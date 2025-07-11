@@ -1,0 +1,160 @@
+databaseChangeLog:
+- changeSet:
+    id: 0021-01
+    author: Lucas Santos
+    context: all
+    comment: Renaming the newsletter_proposition table to newsletter_article
+    changes:
+        - renameTable:
+            oldTableName: newsletter_proposition
+            newTableName: newsletter_article
+    rollback:
+        - renameTable:
+            oldTableName: newsletter_article
+            newTableName: newsletter_proposition
+- changeSet:
+    id: 0021-02
+    author: Lucas Santos
+    context: all
+    comment: Adding the article_id column to the newsletter_article table
+    changes:
+    - addColumn:
+        tableName: newsletter_article
+        columns:
+            name: article_id
+            type: uuid
+    rollback:
+        - dropColumn:
+            tableName: newsletter_article
+            columnName: article_id
+- changeSet:
+    id: 0021-03
+    author: Lucas Santos
+    context: all
+    comment: Adding the article IDs of the propositions to the newsletter_article table
+    changes:
+        - sql:
+            sql:
+                UPDATE newsletter_article SET article_id = proposition.article_id,
+                    updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                FROM proposition WHERE newsletter_article.proposition_id = proposition.id
+    rollback:
+        - sql:
+            sql:
+                UPDATE newsletter_article SET article_id = NULL, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                FROM proposition WHERE newsletter_article.proposition_id = proposition.id
+- changeSet:
+    id: 0021-04
+    author: Lucas Santos
+    context: all
+    comment: Adding constraints for the article_id column of the newsletter_article table
+    changes:
+        - addNotNullConstraint:
+            tableName: newsletter_article
+            columnName: article_id
+        - addForeignKeyConstraint:
+            constraintName: newsletter_article_article_fk
+            baseTableName: newsletter_article
+            baseColumnNames: article_id
+            referencedTableName: article
+            referencedColumnNames: id
+    rollback:
+        - dropNotNullConstraint:
+            tableName: newsletter_article
+            columnName: article_id
+        - dropForeignKeyConstraint:
+            baseTableName: newsletter_article
+            constraintName: newsletter_article_article_fk
+- changeSet:
+    id: 0021-05
+    author: Lucas Santos
+    context: all
+    comment: Changing the primary key constraint of the newsletter_article table to include the article and remove the proposition
+    changes:
+        - dropPrimaryKey:
+            tableName: newsletter_article
+            constraintName: newsletter_proposition_pkey
+        - addPrimaryKey:
+            tableName: newsletter_article
+            columnNames: newsletter_id, article_id
+            constraintName: newsletter_article_pkey
+    rollback:
+        - dropPrimaryKey:
+            tableName: newsletter_article
+            constraintName: newsletter_article_pkey
+        - addPrimaryKey:
+            tableName: newsletter_article
+            columnNames: newsletter_id, proposition_id
+            constraintName: newsletter_proposition_pkey
+- changeSet:
+    id: 0021-06
+    author: Lucas Santos
+    context: all
+    comment: Renaming the foreign key constraints of the newsletter_article table
+    changes:
+        - dropForeignKeyConstraint:
+            baseTableName: newsletter_article
+            constraintName: newsletter_proposition_newsletter_fk
+        - addForeignKeyConstraint:
+            constraintName: newsletter_article_newsletter_fk
+            baseTableName: newsletter_article
+            baseColumnNames: newsletter_id
+            referencedTableName: newsletter
+            referencedColumnNames: id
+        - dropForeignKeyConstraint:
+            baseTableName: newsletter_article
+            constraintName: newsletter_proposition_proposition_fk
+        - addForeignKeyConstraint:
+            constraintName: newsletter_article_proposition_fk
+            baseTableName: newsletter_article
+            baseColumnNames: proposition_id
+            referencedTableName: proposition
+            referencedColumnNames: id
+    rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: newsletter_article
+            constraintName: newsletter_article_newsletter_fk
+        - addForeignKeyConstraint:
+            constraintName: newsletter_proposition_newsletter_fk
+            baseTableName: newsletter_article
+            baseColumnNames: newsletter_id
+            referencedTableName: newsletter
+            referencedColumnNames: id
+        - dropForeignKeyConstraint:
+            baseTableName: newsletter_article
+            constraintName: newsletter_article_proposition_fk
+        - addForeignKeyConstraint:
+            constraintName: newsletter_proposition_proposition_fk
+            baseTableName: newsletter_article
+            baseColumnNames: proposition_id
+            referencedTableName: proposition
+            referencedColumnNames: id
+- changeSet:
+    id: 0021-07
+    author: Lucas Santos
+    context: all
+    comment: Removing the proposition_id column from the newsletter_article table
+    changes:
+        - dropColumn:
+            tableName: newsletter_article
+            columnName: proposition_id
+    rollback:
+        - addColumn:
+            tableName: newsletter_article
+            columns:
+                name: proposition_id
+                type: uuid
+        - sql:
+            sql:
+                UPDATE newsletter_article SET proposition_id = proposition.id,
+                    updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                FROM proposition WHERE newsletter_article.article_id = proposition.article_id
+        - addNotNullConstraint:
+            tableName: newsletter_article
+            columnName: proposition_id
+        - addForeignKeyConstraint:
+            constraintName: newsletter_article_proposition_fk
+            baseTableName: newsletter_article
+            baseColumnNames: proposition_id
+            referencedTableName: proposition
+            referencedColumnNames: id

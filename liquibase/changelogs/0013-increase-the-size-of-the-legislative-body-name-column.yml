@@ -1,0 +1,16 @@
+databaseChangeLog:
+- changeSet:
+    id: 0013-01
+    author: Lucas Santos
+    context: all
+    comment: Increasing the size of the legislative_body name column
+    changes:
+        - modifyDataType:
+            tableName: legislative_body
+            columnName: name
+            newDataType: varchar(1024)
+    rollback:
+        - modifyDataType:
+            tableName: legislative_body
+            columnName: name
+            newDataType: varchar(256)

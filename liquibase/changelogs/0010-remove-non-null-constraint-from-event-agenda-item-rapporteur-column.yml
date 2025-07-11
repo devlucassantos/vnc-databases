@@ -1,0 +1,14 @@
+databaseChangeLog:
+- changeSet:
+    id: 0010-01
+    author: Lucas Santos
+    context: all
+    comment: Removing non-null constraint from event_agenda_item rapporteur_id column
+    changes:
+        - dropNotNullConstraint:
+            tableName: event_agenda_item
+            columnName: rapporteur_id
+    rollback:
+        - addNotNullConstraint:
+            tableName: event_agenda_item
+            columnName: rapporteur_id

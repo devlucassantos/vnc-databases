@@ -485,6 +485,9 @@ databaseChangeLog:
                     defaultValueComputed: "timezone('America/Sao_Paulo'::text, now())"
                     constraints:
                         nullable: false
+    rollback:
+        - dropTable:
+            tableName: article_type
 - changeSet:
     id: 0000-10
     author: Lucas Santos

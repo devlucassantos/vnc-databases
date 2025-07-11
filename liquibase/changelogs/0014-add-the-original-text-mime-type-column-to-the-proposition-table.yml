@@ -1,0 +1,19 @@
+databaseChangeLog:
+- changeSet:
+    id: 0014-01
+    author: Lucas Santos
+    context: all
+    comment: Adding the original_text_mime_type column to the proposition table
+    changes:
+        - addColumn:
+            tableName: proposition
+            columns:
+                name: original_text_mime_type
+                type: varchar(32)
+                value: application/pdf
+                constraints:
+                    nullable: false
+    rollback:
+        - dropColumn:
+            tableName: proposition
+            columnName: original_text_mime_type

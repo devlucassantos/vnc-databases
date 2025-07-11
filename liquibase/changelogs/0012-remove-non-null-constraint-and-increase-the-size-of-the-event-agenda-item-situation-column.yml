@@ -1,0 +1,29 @@
+databaseChangeLog:
+- changeSet:
+    id: 0012-01
+    author: Lucas Santos
+    context: all
+    comment: Removing non-null constraint from voting main proposition column
+    changes:
+        - dropNotNullConstraint:
+            tableName: event_agenda_item
+            columnName: situation
+    rollback:
+        - addNotNullConstraint:
+            tableName: event_agenda_item
+            columnName: situation
+- changeSet:
+    id: 0012-02
+    author: Lucas Santos
+    context: all
+    comment: Increasing the size of the event_agenda_item situation column
+    changes:
+        - modifyDataType:
+            tableName: event_agenda_item
+            columnName: situation
+            newDataType: text
+    rollback:
+        - modifyDataType:
+            tableName: event_agenda_item
+            columnName: situation
+            newDataType: varchar(128)

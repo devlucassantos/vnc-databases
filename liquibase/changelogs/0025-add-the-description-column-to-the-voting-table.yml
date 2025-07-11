@@ -1,0 +1,19 @@
+databaseChangeLog:
+- changeSet:
+    id: 0025-01
+    author: Lucas Santos
+    context: all
+    comment: Adding the description column to the voting table
+    changes:
+        - addColumn:
+            tableName: voting
+            columns:
+                name: description
+                type: varchar(1024)
+                value: A descrição da votação ainda não está disponível.
+                constraints:
+                    nullable: false
+    rollback:
+        - dropColumn:
+            tableName: voting
+            columnName: description

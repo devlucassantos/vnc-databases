@@ -1,0 +1,14 @@
+databaseChangeLog:
+- changeSet:
+    id: 0027-01
+    author: Lucas Santos
+    context: all
+    comment: Removing non-null constraint from the is approved column of the voting table
+    changes:
+        - dropNotNullConstraint:
+            tableName: voting
+            columnName: is_approved
+    rollback:
+        - addNotNullConstraint:
+            tableName: voting
+            columnName: is_approved

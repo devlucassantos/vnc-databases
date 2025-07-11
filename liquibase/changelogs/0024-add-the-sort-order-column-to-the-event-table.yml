@@ -1,0 +1,47 @@
+databaseChangeLog:
+- changeSet:
+    id: 0024-01
+    author: Lucas Santos
+    context: all
+    comment: Adding the sort_order column to the event_type table
+    changes:
+        - addColumn:
+            tableName: event_type
+            columns:
+                name: sort_order
+                type: integer
+    rollback:
+        - dropColumn:
+            tableName: event_type
+            columnName: sort_order
+- changeSet:
+    id: 0024-02
+    author: Lucas Santos
+    context: all
+    comment: Updating the values of the sort_order column in the event_type table
+    changes:
+        - sql:
+            sql:
+                UPDATE event_type SET sort_order = CASE WHEN description = 'Sessão Deliberativa' THEN 1
+                    WHEN description = 'Reunião Deliberativa' THEN 2 WHEN description = 'Comissão Geral' THEN 3
+                    WHEN description = 'Audiência Pública' THEN 4 WHEN description = 'Outros Eventos' THEN 5
+                    ELSE sort_order END, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE active = true
+    rollback:
+        - sql:
+            sql:
+                UPDATE event_type SET sort_order = null, updated_at = TIMEZONE('America/Sao_Paulo', NOW())
+                WHERE active = true
+- changeSet:
+    id: 0024-03
+    author: Lucas Santos
+    context: all
+    comment: Adding non-null constraint for sort_order column of event_type table
+    changes:
+        - addNotNullConstraint:
+            tableName: event_type
+            columnName: sort_order
+    rollback:
+        - dropNotNullConstraint:
+            tableName: event_type
+            columnName: sort_order
