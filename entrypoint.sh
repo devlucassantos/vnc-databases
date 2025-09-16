@@ -2,7 +2,7 @@
 
 cd /liquibase/changelog
 
-while ! pg_isready -h "$POSTGRES_DB" -U "$POSTGRES_USER"; do
+while ! pg_isready -h "$POSTGRES_HOST" -U "$POSTGRES_USER"; do
     sleep 1
 done
 

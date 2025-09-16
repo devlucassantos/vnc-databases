@@ -7,7 +7,7 @@ services:
         volumes:
             - ./liquibase:/liquibase/changelog
         environment:
-            POSTGRES_DB: vnc_postgresql
+            POSTGRES_HOST: vnc_postgresql
             POSTGRES_USER: vnc_postgresql_user
             POSTGRES_PASSWORD: vnc_d4tab4s&
             LIQUIBASE_COMMAND_URL: jdbc:postgresql://vnc_postgresql:5432/vnc_postgresql
