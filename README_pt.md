@@ -4,14 +4,14 @@
 
 `vnc-databases` é o repositório responsável por gerenciar a infraestrutura de dados da plataforma
 [Você na Câmara (VNC)](#você-na-câmara). Neste repositório, você encontrará todos os containers Docker necessários para
-a execução de todas as bases de dados da plataforma, que utiliza tecnologias como PostgreSQL, Redis e Liquibase. Deste
+a execução de todos os bancos de dados da plataforma, que utiliza tecnologias como PostgreSQL, Redis e Liquibase. Deste
 modo, este repositório é pré-requisito fundamental para rodar todos os softwares da Você na Câmara localmente.
 
 ## Como Executar
 
 ### Executando via Docker
 
-Para construir as bases de dados, você precisará ter o [Docker](https://www.docker.com) instalado na sua máquina e
+Para construir os bancos de dados, você precisará ter o [Docker](https://www.docker.com) instalado na sua máquina e
 executar os seguintes comandos no diretório raiz deste projeto:
 
 ````shell
@@ -21,7 +21,7 @@ docker compose up --build
 
 ### Documentação
 
-Após a execução do projeto, será possível acessar as bases de dados por meio de interfaces de linha de comando ou IDEs
+Após a execução do projeto, será possível acessar os bancos de dados por meio de interfaces de linha de comando ou IDEs
 compatíveis. A seguir, estão as informações necessárias para realizar essas conexões:
 
 * **PostgreSQL:**
